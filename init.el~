@@ -1,0 +1,83 @@
+(setq package-archives '(("gnu"          . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+			 ("melpa"        . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+			 ("melpa-stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/")
+			 ("org"          . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
+
+(package-initialize)
+(column-number-mode t)
+
+(require 'use-package)
+
+;;Lanage Server
+(use-package lsp-mode
+	     :ensure t
+	     :commands (lsp lsp-deferred)
+	     :hook (go-mode . lsp-deferred))
+(use-package lsp-ui :commands lsp-ui-mode)
+(use-package company-lsp :commands company-lsp)
+
+(use-package ccls
+	     :hook ((c-mode c++-mode objc-mode cuda-mode) .
+		    (lambda () (require 'ccls) (lsp))))
+
+(setq ccls-executable "/usr/bin/ccls")
+
+;;Golang
+(defun lsp-go-install-save-hooks ()
+	(add-hook 'before-save-hook #'lsp-format-buffer t t)
+	(add-hook 'before-save-hook #'lsp-organize-imports t t))
+(use-package go-mode
+	     :ensure t
+	     :mode (("\\.go\\'" . go-mode))
+	     :init
+	     (add-hook 'go-mode-hook #'lsp-go-install-save-hooks))
+
+;;JavaScript, TypeScript, CoffeeScript
+(require 'lsp-typescript)
+
+;; Javascript, Typescript and Flow support for lsp-mode
+;;
+;; Install:
+;;
+;; npm install -g typescript
+;; npm install -g typescript-language-server
+;;
+;; Fixed error "[tsserver] /bin/sh: /usr/local/Cellar/node/10.5.0_1/bin/npm: No such file or directory" :
+;; 
+;; sudo ln -s /usr/local/bin/npm /usr/local/Cellar/node/10.5.0_1/bin/npm
+;;
+(add-hook 'js-mode-hook #'lsp-typescript-enable)
+(add-hook 'typescript-mode-hook #'lsp-typescript-enable) ;; for typescript support
+(add-hook 'js3-mode-hook #'lsp-typescript-enable) ;; for js3-mode support
+(add-hook 'rjsx-mode #'lsp-typescript-enable) ;; for rjsx-mode support
+
+(defun lsp-company-transformer (candidates)
+  (let ((completion-ignore-case t))
+    (all-completions (company-grab-symbol) candidates)))
+
+(defun lsp-js-hook nil
+  (make-local-variable 'company-transformers)
+  (push 'lsp-company-transformer company-transformers))
+
+(add-hook 'js-mode-hook 'lsp-js-hook)
+
+(setq-default tab-width 4)
+(setq-default indent-tab-mode nil)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+	(rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy company-lsp lsp-ivy flycheck lsp-ui dap-mode lsp-mode slime python-mode lorem-ipsum))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+;;Set your lisp system and optionally, some contribs
+(setq inferior-lisp-program "/usr/bin/sbcl")
+(setq slime-contribs '(slime-fancy))

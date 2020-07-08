@@ -1,0 +1,9 @@
+ls
+ls -la
+gcc -lstdc++ t.cpp -o t
+gcc -lstdc++ t.cpp -o t
+gcc -lstdc++ t.cpp -o  t
+./t
+gcc -lstdc++ t.cpp
+ls
+./a.out
