@@ -7,3 +7,7 @@ gcc -lstdc++ t.cpp -o  t
 gcc -lstdc++ t.cpp
 ls
 ./a.out
+gcc -lstdc++ t.cpp
+ls
+./a.out
+exit
