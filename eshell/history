@@ -11,3 +11,26 @@ gcc -lstdc++ t.cpp
 ls
 ./a.out
 exit
+ruby d1.ruby
+ruby d1.ruby
+ruby d1.ruby
+ruby -l d1.ruby
+ruby -l d1.ruby
+ruby -l d1.ruby
+ruby -l d1.ruby
+ruby -l d1.ruby
+ruby -l d1.ruby
+ruby -l d1.ruby
+ruby -l d1.ruby
+ruby -l d1.ruby
+ruby -l d1.ruby
+ruby -l d1.ruby
+ruby -l d1.ruby
+ruby -l d1.ruby
+ruby -l d1.ruby
+ruby -l d1.ruby
+ruby -l d1.ruby
+ruby d2.rb 
+ruby d2.rb 
+ruby d2.rb 
+ruby d2.rb 

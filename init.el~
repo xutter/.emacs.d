@@ -1,7 +1,7 @@
 (setq package-archives '(("gnu"          . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-			 ("melpa"        . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-			 ("melpa-stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/")
-			 ("org"          . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
+						 ("melpa"        . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+						 ("melpa-stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/")
+						 ("org"          . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
 
 (package-initialize)
 (column-number-mode t)
@@ -14,21 +14,20 @@
 ;;(use-package rjsx-mode :ensure t)
 
 ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-(setq lsp-keymap-prefix "s-l")
+(setq lsp-keymap-prefix "C-l")
 
 (use-package lsp-mode
   :ensure t
-  :config
-  (require 'lsp-client)
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
 		 (go-mode . lsp-deferred)
          (c++-mode . lsp-deferred)
 		 (js2-mode . lsp-deferred)
 		 (php-mode . lsp-deferred)
-		 ;;(typescript-mode . lsp-deferred)
-		 ;;(rjsx-mode . lsp-deferred)
+		 (typescript-mode . lsp-deferred)
+		 (rjsx-mode . lsp-deferred)
 		 (css-mode . lsp-deferred)
 		 (web-mode . lsp-deferred)
+		 (ruby-mode . lsp-deferred)
          ;; if you want which-key integration
          (lsp-mode . lsp-enable-which-key-integration))
   :commands (lsp lsp-deferred))
@@ -41,6 +40,9 @@
 (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
 (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 (use-package yasnippet :ensure t)
+(yas-global-mode 1)
+(yas-reload-all)
+(add-hook 'prog-mode-hook #'yas-minor-mode)
 ;; optionally if you want to use debugger
 (use-package dap-mode)
 ;; (use-package dap-LANGUAGE) to load the dap adapter for your language
@@ -56,20 +58,20 @@
   :commands company-lsp)
 
 (use-package ccls
-	     :hook ((c-mode c++-mode objc-mode cuda-mode) .
-		    (lambda () (require 'ccls) (lsp))))
+  :hook ((c-mode c++-mode objc-mode cuda-mode) .
+		 (lambda () (require 'ccls) (lsp))))
 
 (setq ccls-executable "/usr/bin/ccls")
 
 ;;Golang
 (defun lsp-go-install-save-hooks ()
-	(add-hook 'before-save-hook #'lsp-format-buffer t t)
-	(add-hook 'before-save-hook #'lsp-organize-imports t t))
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
 (use-package go-mode
-	     :ensure t
-	     :mode (("\\.go\\'" . go-mode))
-	     :init
-	     (add-hook 'go-mode-hook #'lsp-go-install-save-hooks))
+  :ensure t
+  :mode (("\\.go\\'" . go-mode))
+  :init
+  (add-hook 'go-mode-hook #'lsp-go-install-save-hooks))
 ;;JavaScript, TypeScript, CoffeeScript
 (use-package tide
   :ensure t
@@ -88,6 +90,15 @@
 (add-hook 'typescript-mode-hook #'setup-tide-mode)
 (add-hook 'js2-mode-hook #'setup-tide-mode)
 (flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append)
+
+;;For ruby
+(add-to-list 'load-path "~/.emacs.d/elpa/solargraph/")
+;;(require 'solargraph)
+;;(define-key ruby-mode-map (kbd "M-i") 'solargraph:complete)
+;;Auto-complete setup
+
+;;(require 'ac-solargraph)
+;;(define-key ruby-mode-map (kbd "M-i") 'solargraph:complete)
 ;;(require 'tide)
 
 ;;(dolist (hook (list
@@ -103,8 +114,11 @@
 ;;                     (tide-restart-server))
 ;;                   )))
 ;;
-(setq-default tab-width 4)
-(setq-default indent-tab-mode nil)
+(setq default-tab-width 4)
+(setq tab-width 4)
+(setq c-default-style "Linux")
+(setq c-basic-offset 4)
+(setq indent-tab-mode nil)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -112,7 +126,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-	(which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy company-lsp lsp-ivy flycheck lsp-ui dap-mode lsp-mode slime python-mode lorem-ipsum))))
+    (swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy company-lsp lsp-ivy flycheck lsp-ui dap-mode lsp-mode slime python-mode lorem-ipsum))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

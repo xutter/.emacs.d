@@ -469,7 +469,7 @@
 	    (:keywords "comm" "hypermedia")
 	    (:url . "http://elpa.gnu.org/packages/debbugs.html"))])
  (delight .
-	  [(1 5)
+	  [(1 7)
 	   ((cl-lib
 	     (0 5))
 	    (nadvice
@@ -675,7 +675,7 @@
 	      (:keywords "lisp")
 	      (:url . "http://elpa.gnu.org/packages/el-search.html"))])
  (eldoc .
-	[(1 0 0)
+	[(1 5 0)
 	 ((emacs
 	   (26 3)))
 	 "Show function arglist or variable docstring in echo area" single
@@ -814,9 +814,11 @@
 	     ("Barry O'Reilly" . "gundaetiapo@gmail.com"))
 	    (:maintainer "Barry O'Reilly" . "gundaetiapo@gmail.com"))])
  (flymake .
-	  [(1 0 8)
+	  [(1 0 9)
 	   ((emacs
-	     (26 1)))
+	     (26 1))
+	    (eldoc
+	     (1 1 0)))
 	   "A universal on-the-fly syntax checker" single
 	   ((:url . "http://elpa.gnu.org/packages/flymake.html")
 	    (:keywords "c" "languages" "tools")
@@ -1033,7 +1035,7 @@
 	   ("Oleh Krehel" . "ohwoeowho@gmail.com"))
 	  (:keywords "bindings"))])
  (hyperbole .
-	    [(7 0 6)
+	    [(7 1 2)
 	     ((emacs
 	       (24 4)))
 	     "GNU Hyperbole: The Everyday Hypertextual Information Manager" tar
