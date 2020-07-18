@@ -34,6 +34,11 @@
 (global-set-key (kbd "C-x l") 'counsel-locate)
 (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
 (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
+
+;;theme
+(require 'solarized-theme)
+(load-theme 'solarized-dark t)
+
 ;;(use-package typescript-mode :ensure t)
 (use-package js2-mode :ensure t)
 ;;(use-package rjsx-mode :ensure t)
@@ -41,24 +46,33 @@
 ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
 (setq lsp-keymap-prefix "C-l")
 
+;;(use-package lsp-python-ms
+;;  :ensure t
+;;  :init (setq lsp-python-ms-auto-install-server t)
+;;  :hook (python-mode . (lambda ()
+;;			 (require 'lsp-python-ms)
+;;			 (lsp-deferred))))
+
 (use-package lsp-mode
   :ensure t
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-		 (go-mode . lsp-deferred)
-         (c++-mode . lsp-deferred)
-		 (js2-mode . lsp-deferred)
-		 (php-mode . lsp-deferred)
-		 (typescript-mode . lsp-deferred)
-		 (rjsx-mode . lsp-deferred)
-		 (css-mode . lsp-deferred)
-		 (web-mode . lsp-deferred)
-		 (ruby-mode . lsp-deferred)
-         ;; if you want which-key integration
+	 (python-mode . lsp-deferred)
+	 (go-mode . lsp-deferred)
+	 (c++-mode . lsp-deferred)
+	 (php-mode . lsp-deferred)
+	 (css-mode . lsp-deferred)
+	 (web-mode . lsp-deferred)
+	 (ruby-mode . lsp-deferred)
+	 ;; if you want which-key integration
          (lsp-mode . lsp-enable-which-key-integration))
-  :commands (lsp lsp-deferred))
+  :commands
+  (lsp lsp-deferred))
 
 ;; optionally
-(use-package lsp-ui :commands lsp-ui-mode)
+(use-package lsp-ui
+  :init
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+  :commands lsp-ui-mode)
 ;; if you are helm user
 (use-package helm-lsp :commands helm-lsp-workspace-symbol)
 ;; if you are ivy user
@@ -80,7 +94,9 @@
 
 (use-package company-lsp
   :ensure t
-  :commands company-lsp)
+  :commands company-lsp
+  :config
+  (push 'company-lsp company-backends))
 
 (use-package ccls
   :hook ((c-mode c++-mode objc-mode cuda-mode) .
@@ -92,11 +108,15 @@
 (defun lsp-go-install-save-hooks ()
   (add-hook 'before-save-hook #'lsp-format-buffer t t)
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
+
+(require 'snippet)
+
 (use-package go-mode
   :ensure t
   :mode (("\\.go\\'" . go-mode))
   :init
   (add-hook 'go-mode-hook #'lsp-go-install-save-hooks))
+
 ;;JavaScript, TypeScript, CoffeeScript
 (use-package tide
   :ensure t
@@ -125,21 +145,21 @@
 
 (require 'ac-solargraph)
 ;;(define-key ruby-mode-map (kbd "M-i") 'solargraph:complete)
-;;(require 'tide)
+(require 'tide)
 
-;;(dolist (hook (list
-;;               'js2-mode-hook
-;;               'rjsx-mode-hook
-;;               'typescript-mode-hook
-;;               ))
-;;  (add-hook hook (lambda ()
-;;                   ;; 初始化 tide
-;;                   (tide-setup)
-;;                   ;; 当 tsserver 服务没有启动时自动重新启动
-;;                   (unless (tide-current-server)
-;;                     (tide-restart-server))
-;;                   )))
-;;
+(dolist (hook (list
+               'js2-mode-hook
+               'rjsx-mode-hook
+               'typescript-mode-hook
+               ))
+  (add-hook hook (lambda ()
+                   ;; 初始化 tide
+                   (tide-setup)
+                   ;; 当 tsserver 服务没有启动时自动重新启动
+                   (unless (tide-current-server)
+                     (tide-restart-server))
+                   )))
+
 (setq default-tab-width 4)
 (setq tab-width 4)
 (setq c-default-style "Linux")
@@ -150,9 +170,12 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("2809bcb77ad21312897b541134981282dc455ccd7c14d74cc333b6e549b824f3" default)))
  '(package-selected-packages
    (quote
-    (swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy company-lsp lsp-ivy flycheck lsp-ui dap-mode lsp-mode slime python-mode lorem-ipsum))))
+    (pydoc lsp-jedi jedi elpy lsp-python-ms snippet solarized-theme swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy company-lsp lsp-ivy flycheck lsp-ui dap-mode lsp-mode slime python-mode lorem-ipsum))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
