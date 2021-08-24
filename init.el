@@ -4,7 +4,13 @@
 						 ("org"          . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
 
 (package-initialize)
-(column-number-mode t)
+(global-linum-mode)
+
+(visual-line-mode 1)
+(toggle-truncate-lines 1)
+
+(when (member "Source Code Pro" (font-family-list))
+  (set-frame-font "Source Code Pro-10" t t))
 
 (require 'use-package)
 
@@ -51,6 +57,7 @@
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
        	 (go-mode . lsp-deferred)
          (c++-mode . lsp-deferred)
+	 ;; (python-mode . lsp-deferred)
 ;;         (js2-mode . lsp-deferred)
 ;;	 (php-mode . lsp-deferred)
 ;;	 (typescript-mode . lsp-deferred)
@@ -59,7 +66,8 @@
 ;;	 (web-mode . lsp-deferred)
 ;;	 (ruby-mode . lsp-deferred)
          ;; if you want which-key integration
-         (lsp-mode . lsp-enable-which-key-integration))
+         ;; (lsp-mode . lsp-enable-which-key-integration))
+	 )
   :commands (lsp lsp-deferred))
 ;;Set up before-save hooks to format buffer and add/delete imports.
 ;;Make sure you don't have other gofmt/goimports hooks enabled.
@@ -109,8 +117,16 @@
 
 (use-package ccls
   :hook ((c-mode c++-mode objc-mode cuda-mode) . (lambda () (require 'ccls) (lsp))))
-
 (setq ccls-executable "/usr/bin/ccls")
+
+(use-package lsp-python-ms
+  :ensure t
+  :hook (python-mode . (lambda ()
+                         (require 'lsp-python-ms)
+                         (lsp)))
+  :init
+  (setq lsp-python-ms-executable "D:\\git\\python-language-server-master\\output\\bin\\Release\\Microsoft.Python.LanguageServer.exe"))
+;; (setq lsp-pyhon-ms-executable "D:\\git\\python-language-server-master\\output\\bin\\Release\\Microsoft.Python.LanguageServer.exe")
 
 ;;Golang
 ;;(defun lsp-go-install-save-hooks ()
@@ -180,8 +196,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   (quote
-    (reveal-in-osx-finder org-re-reveal-ref solarized-theme swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy company-lsp lsp-ivy flycheck lsp-ui dap-mode lsp-mode slime python-mode lorem-ipsum))))
+   '(reveal-in-osx-finder org-re-reveal-ref solarized-theme swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy company-lsp lsp-ivy flycheck lsp-ui dap-mode lsp-mode slime python-mode lorem-ipsum)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
