@@ -7,10 +7,25 @@
 (global-linum-mode)
 
 (visual-line-mode 1)
-(toggle-truncate-lines 1)
+(set-default 'truncate-lines t)
 
-(when (member "Source Code Pro" (font-family-list))
-  (set-frame-font "Source Code Pro-10" t t))
+;;(when (member "Source Code Pro" (font-family-list))
+;;  (set-frame-font "Source Code Pro-10" t t))
+ ;; ============================================================
+;; Setting English Font
+(set-face-attribute 'default nil :font "Source Code Pro-10")
+;; Setting Chinese Font
+(dolist (charset '(kana han symbol cjk-misc bopomofo))
+  (set-fontset-font (frame-parameter nil 'font)
+		    charset
+		    (font-spec :family "仿宋" :size 15))) 
+;;(setq fonts '("Consolas" "仿宋"))
+;;(set-fontset-font t 'unicode "Segoe UI Emoji" nil 'prepend)
+;;(set-face-attribute 'default nil :font
+;;					(format "%s:pixelsize=%d" (car fonts) 14))
+;;(set-face-attribute 'default nil :font (font-spec :family "Source Code Pro" :size 14))
+;;(set-fontset-font t 'unicode (font-spec :family "Segoe UI Emoji" :size 14))
+;;(set-fontset-font t '(#x2ff0 . #x9ffc) (font-spec :family "仿宋" :size 18 :weight 'bold))
 
 (require 'use-package)
 
@@ -26,11 +41,13 @@
   :ensure t
   :init
   (load-theme 'solarized-light t))
-;;(use-package which-key :ensure t)
+
 (use-package counsel
-	     :ensure t)
+  :ensure t)
+
 (use-package swiper
   :ensure t)
+
 (ivy-mode 1)
 (setq ivy-use-virtual-buffers t)
 (setq enable-recursive-minibuffers t)
@@ -53,9 +70,6 @@
 (global-set-key (kbd "C-x l") 'counsel-locate)
 (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
 (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
-;;(use-package typescript-mode :ensure t)
-;;(use-package js2-mode :ensure t)
-;;(use-package rjsx-mode :ensure t)
 
 ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
 (setq lsp-keymap-prefix "C-l")
@@ -64,18 +78,7 @@
   :ensure t
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
        	 (go-mode . lsp-deferred)
-         (c++-mode . lsp-deferred)
-	 ;; (python-mode . lsp-deferred)
-;;         (js2-mode . lsp-deferred)
-;;	 (php-mode . lsp-deferred)
-;;	 (typescript-mode . lsp-deferred)
-;;	 (rjsx-mode . lsp-deferred)
-;;	 (css-mode . lsp-deferred)
-;;	 (web-mode . lsp-deferred)
-;;	 (ruby-mode . lsp-deferred)
-         ;; if you want which-key integration
-         ;; (lsp-mode . lsp-enable-which-key-integration))
-	 )
+         (c++-mode . lsp-deferred))
   :commands (lsp lsp-deferred))
 ;;Set up before-save hooks to format buffer and add/delete imports.
 ;;Make sure you don't have other gofmt/goimports hooks enabled.
@@ -93,9 +96,14 @@
 (use-package helm-lsp
   :commands helm-lsp-workspace-symbol)
 ;; if you are ivy user
-(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
-(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
-(use-package yasnippet :ensure t)
+(use-package lsp-ivy
+  :commands lsp-ivy-workspace-symbol)
+
+(use-package lsp-treemacs
+  :commands lsp-treemacs-errors-list)
+
+(use-package yasnippet
+  :ensure t)
 (yas-global-mode 1)
 (yas-reload-all)
 (add-hook 'prog-mode-hook #'yas-minor-mode)
@@ -119,13 +127,16 @@
   :config
   (setq company-idle-delay 0)
   (setq company-minimum-prefix-length 1))
+
 (use-package company-lsp
   :ensure t
   :commands company-lsp)
 
-(use-package ccls
-  :hook ((c-mode c++-mode objc-mode cuda-mode) . (lambda () (require 'ccls) (lsp))))
-(setq ccls-executable "/usr/bin/ccls")
+;; (use-package ccls
+;;   :hook ((c-mode c++-mode objc-mode cuda-mode) . (lambda () (require 'ccls) (lsp))))
+;; (setq ccls-executable "/usr/bin/ccls")
+;;
+(setq lsp-clangd-binary-path "C:\\LLVM\\bin\\clangd.exe")
 
 (use-package lsp-python-ms
   :ensure t
@@ -133,7 +144,7 @@
                          (require 'lsp-python-ms)
                          (lsp)))
   :init
-  (setq lsp-python-ms-executable "D:\\git\\python-language-server-master\\output\\bin\\Release\\Microsoft.Python.LanguageServer.exe"))
+  (setq lsp-python-ms-executable "D:\\git\\python-language-server\\output\\bin\\Release\\Microsoft.Python.LanguageServer.exe"))
 ;; (setq lsp-pyhon-ms-executable "D:\\git\\python-language-server-master\\output\\bin\\Release\\Microsoft.Python.LanguageServer.exe")
 
 ;;Golang
@@ -213,5 +224,5 @@
  )
 
 ;;Set your lisp system and optionally, some contribs
-(setq inferior-lisp-program "/usr/bin/sbcl")
+(setq inferior-lisp-program "c:\\sbcl\\2.0.0\\sbcl.exe")
 (setq slime-contribs '(slime-fancy))
