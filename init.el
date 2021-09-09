@@ -2,15 +2,20 @@
                          ("melpa"        . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
                          ("melpa-stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/")
                          ("org"          . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
-
+(setq url-proxy-services '(("http" . "localhost:58591") ("http" . "localhost:58591")))
 (package-initialize)
 (global-linum-mode)
 
 (visual-line-mode 1)
 (toggle-truncate-lines 1)
 
-(when (member "Source Code Pro" (font-family-list))
-  (set-frame-font "Source Code Pro-10" t t))
+;; Setting English Font
+(set-face-attribute 'default nil :font "Source Code Pro-10")
+;; Setting Chinese Font
+(dolist (charset '(kana han symbol cjk-misc bopomofo))
+  (set-fontset-font (frame-parameter nil 'font)
+		    charset
+		    (font-spec :family "仿宋" :size 15))) 
 
 (require 'use-package)
 
@@ -65,7 +70,6 @@
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
        	 (go-mode . lsp-deferred)
          (c++-mode . lsp-deferred)
-	 ;; (python-mode . lsp-deferred)
 ;;         (js2-mode . lsp-deferred)
 ;;	 (php-mode . lsp-deferred)
 ;;	 (typescript-mode . lsp-deferred)
@@ -126,15 +130,6 @@
 (use-package ccls
   :hook ((c-mode c++-mode objc-mode cuda-mode) . (lambda () (require 'ccls) (lsp))))
 (setq ccls-executable "/usr/bin/ccls")
-
-(use-package lsp-python-ms
-  :ensure t
-  :hook (python-mode . (lambda ()
-                         (require 'lsp-python-ms)
-                         (lsp)))
-  :init
-  (setq lsp-python-ms-executable "D:\\git\\python-language-server-master\\output\\bin\\Release\\Microsoft.Python.LanguageServer.exe"))
-;; (setq lsp-pyhon-ms-executable "D:\\git\\python-language-server-master\\output\\bin\\Release\\Microsoft.Python.LanguageServer.exe")
 
 ;;Golang
 ;;(defun lsp-go-install-save-hooks ()
@@ -197,7 +192,7 @@
 (setq c-basic-offset 4)
 (setq indent-tab-mode nil)
 (setq inhibit-splash-screen t)
-
+(load-file "~/.emacs.d/python-mode.el")
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
