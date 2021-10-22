@@ -70,6 +70,7 @@
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
        	 (go-mode . lsp-deferred)
          (c++-mode . lsp-deferred)
+	 (python-mode . lsp-deferred)
 ;;         (js2-mode . lsp-deferred)
 ;;	 (php-mode . lsp-deferred)
 ;;	 (typescript-mode . lsp-deferred)
@@ -192,7 +193,7 @@
 (setq c-basic-offset 4)
 (setq indent-tab-mode nil)
 (setq inhibit-splash-screen t)
-(load-file "~/.emacs.d/python-mode.el")
+(load-file "~/.emacs.d/python-config.el")
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
