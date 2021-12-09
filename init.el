@@ -3,6 +3,8 @@
                          ("melpa-stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/")
                          ("org"          . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
 
+(server-start)
+
 (package-initialize)
 (global-linum-mode)
 
@@ -18,7 +20,7 @@
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font (frame-parameter nil 'font)
 		    charset
-		    (font-spec :family "仿宋" :size 15))) 
+		    (font-spec :family "宋体" :size 15))) 
 ;;(setq fonts '("Consolas" "仿宋"))
 ;;(set-fontset-font t 'unicode "Segoe UI Emoji" nil 'prepend)
 ;;(set-face-attribute 'default nil :font
@@ -78,15 +80,12 @@
   :ensure t
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
        	 (go-mode . lsp-deferred)
-         (c++-mode . lsp-deferred))
+         (c++-mode . lsp-deferred)
+	 (python-mode . lsp-deferred)
+	 (yaml-mode . lsp-deferred))
   :commands (lsp lsp-deferred))
 ;;Set up before-save hooks to format buffer and add/delete imports.
 ;;Make sure you don't have other gofmt/goimports hooks enabled.
-
-(defun lsp-go-install-save-hooks ()
-  (add-hook 'before-save-hook #'lsp-format-buffer t t)
-  (add-hook 'before-save-hook #'lsp-organize-imports t t))
-(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 
 ;; optionally
 (use-package lsp-ui
@@ -132,51 +131,26 @@
   :ensure t
   :commands company-lsp)
 
-;; (use-package ccls
-;;   :hook ((c-mode c++-mode objc-mode cuda-mode) . (lambda () (require 'ccls) (lsp))))
-;; (setq ccls-executable "/usr/bin/ccls")
-;;
-(setq lsp-clangd-binary-path "C:\\LLVM\\bin\\clangd.exe")
+;; C++-mode language protocol
+(setq lsp-clangd-binary-path "C:\\prog\\LLVM\\bin\\clangd.exe")
 
-(use-package lsp-python-ms
+;; YAML
+(use-package yaml-mode
   :ensure t
-  :hook (python-mode . (lambda ()
-                         (require 'lsp-python-ms)
-                         (lsp)))
-  :init
-  (setq lsp-python-ms-executable "D:\\git\\python-language-server\\output\\bin\\Release\\Microsoft.Python.LanguageServer.exe"))
-;; (setq lsp-pyhon-ms-executable "D:\\git\\python-language-server-master\\output\\bin\\Release\\Microsoft.Python.LanguageServer.exe")
+  :mode (("\\.yaml\\'" . yaml-mode)))
 
 ;;Golang
-;;(defun lsp-go-install-save-hooks ()
-;;  (add-hook 'before-save-hook #'lsp-format-buffer t t)
-;;  (add-hook 'before-save-hook #'lsp-organize-imports t t))
-;;(use-package go-mode
-;;  :ensure t
-;;  :mode (("\\.go\\'" . go-mode))
-;;  ;;:init
-;;  ;;(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
-;;  :hook
-;;  ((before-save . #'lsp-format-buffer)
-;;   (before-save . #'lsp-organize-imports)))
-;;JavaScript, TypeScript, CoffeeScript
-;;(use-package tide
-;;  :ensure t
-;;  :init
-;;  (setq tide-tsserver-executable "/usr/bin/tsserver"))
-;;(defun setup-tide-mode()
-;;  (interactive)
-;;  (tide-setup)
-;;  (flycheck-mode +1)
-;;  (setq flycheck-check-syntax-automatically '(save-mode-enable))
-;;  (tide-hl-identifier-mode +1)
-;;  (company-mode +1))
-;;(setq company-tooltip-align-annotations t)
-;;(add-hook 'before-save-hook 'tide-format-before-save)
-;;(add-hook 'typescript-mode-hook #'setup-tide-mode)
-;;(add-hook 'js2-mode-hook #'setup-tide-mode)
-;;(flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append)
-;;
+(use-package go-mode
+  :ensure t
+  :mode (("\\.go\\'" . go-mode))
+  :init
+  (add-hook 'go-mode-hook
+            (lambda ()
+              (setq tab-width 4)
+              (setq indent-tabs-mode nil)
+	      (add-hook 'before-save-hook #'lsp-format-buffer t t)
+	      (add-hook 'before-save-hook #'lsp-organize-imports t t))))
+
 ;;For ruby
 (setq ruby-ls "solargraph")
 (add-to-list 'load-path "~/.emacs.d/elpa/solargraph/")
@@ -187,20 +161,6 @@
 (require 'ac-solargraph)
 ;;(define-key ruby-mode-map (kbd "M-i") 'solargraph:complete)
 ;;(require 'tide)
-
-;;(dolist (hook (list
-;;               'js2-mode-hook
-;;               'rjsx-mode-hook
-;;               'typescript-mode-hook
-;;               ))
-;;  (add-hook hook (lambda ()
-;;                   ;; 初始化 tide
-;;                   (tide-setup)
-;;                   ;; 当 tsserver 服务没有启动时自动重新启动
-;;                   (unless (tide-current-server)
-;;                     (tide-restart-server))
-;;                   )))
-;;
 
 (setq default-tab-width 4)
 (setq tab-width 4)
@@ -215,7 +175,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(reveal-in-osx-finder org-re-reveal-ref solarized-theme swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy company-lsp lsp-ivy flycheck lsp-ui dap-mode lsp-mode slime python-mode lorem-ipsum)))
+   '(counsel-etags yaml-mode yaml pcre2el auto-complete reveal-in-osx-finder org-re-reveal-ref solarized-theme swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy company-lsp lsp-ivy flycheck lsp-ui dap-mode lsp-mode slime python-mode lorem-ipsum)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -224,5 +184,5 @@
  )
 
 ;;Set your lisp system and optionally, some contribs
-(setq inferior-lisp-program "c:\\sbcl\\2.0.0\\sbcl.exe")
+(setq inferior-lisp-program "c:\\prog\\SteelBankCommonLisp\\sbcl.exe")
 (setq slime-contribs '(slime-fancy))
