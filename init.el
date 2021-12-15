@@ -5,6 +5,9 @@
 
 (server-start)
 
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+
 (package-initialize)
 (global-linum-mode)
 
@@ -15,14 +18,14 @@
 ;;  (set-frame-font "Source Code Pro-10" t t))
  ;; ============================================================
 ;; Setting English Font
-(set-face-attribute 'default nil :font "Source Code Pro-10")
+(set-face-attribute 'default nil :font "SauceCodePro Nerd Font-12")
+(set-fontset-font t 'unicode "Segoe UI Emoji" nil 'prepend)
 ;; Setting Chinese Font
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font (frame-parameter nil 'font)
 		    charset
-		    (font-spec :family "宋体" :size 15))) 
+		    (font-spec :family "宋体" :size 16)))
 ;;(setq fonts '("Consolas" "仿宋"))
-;;(set-fontset-font t 'unicode "Segoe UI Emoji" nil 'prepend)
 ;;(set-face-attribute 'default nil :font
 ;;					(format "%s:pixelsize=%d" (car fonts) 14))
 ;;(set-face-attribute 'default nil :font (font-spec :family "Source Code Pro" :size 14))
@@ -37,12 +40,15 @@
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
-  :init (setq markdown-command "C:\\Pandoc\\pandoc.exe"))
+  :init (setq markdown-command "C:\\prog\\Pandoc\\pandoc.exe"))
 
 (use-package solarized-theme
+  :ensure t)
+
+(use-package inkpot-theme
   :ensure t
   :init
-  (load-theme 'solarized-light t))
+  (load-theme 'inkpot t))
 
 (use-package counsel
   :ensure t)
@@ -71,6 +77,7 @@
 (global-set-key (kbd "C-c k") 'counsel-ag)
 (global-set-key (kbd "C-x l") 'counsel-locate)
 (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+(global-set-key (kbd "C-c s") 'counsel-etags-grep)
 (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
 
 ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
@@ -174,8 +181,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("e7ba99d0f4c93b9c5ca0a3f795c155fa29361927cadb99cfce301caf96055dfd" "3b8284e207ff93dfc5e5ada8b7b00a3305351a3fb222782d8033a400a48eca48" "d6692db3e3ba6dbfd61473ad89794abe234fa2eceed977dcff279fda96316e2e" default))
  '(package-selected-packages
-   '(counsel-etags yaml-mode yaml pcre2el auto-complete reveal-in-osx-finder org-re-reveal-ref solarized-theme swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy company-lsp lsp-ivy flycheck lsp-ui dap-mode lsp-mode slime python-mode lorem-ipsum)))
+   '(twilight-theme zenburn-theme inkpot-theme all-the-icons-dired all-the-icons-ivy all-the-icons-completion all-the-icons-ibuffer all-the-icons-ivy-rich treemacs-all-the-icons all-the-icons counsel-etags yaml-mode yaml pcre2el auto-complete reveal-in-osx-finder org-re-reveal-ref solarized-theme swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy company-lsp lsp-ivy flycheck lsp-ui dap-mode lsp-mode slime python-mode lorem-ipsum)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
