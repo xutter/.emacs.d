@@ -5,20 +5,8 @@
   :ensure t
   :defer t
   :config
-  (setq treemacs-no-png-images t
-	  treemacs-width 24)
+  (setq treemacs-width 36)
   :bind ("C-c t" . treemacs))
-
-;; Provide LSP-mode for python, it requires a language server.
-;; I use `lsp-pyright`. Know that you have to `M-x lsp-restart-workspace` 
-;; if you change the virtual environment in an open python buffer.
-
-(use-package lsp-mode
-:ensure t
-:defer t
-:commands (lsp lsp-deferred)
-:init (setq lsp-keymap-prefix "C-c l")
-:hook (python-mode . lsp-deferred))
 
 ;; Provides completion, with the proper backend
 ;; it will provide Python completion.
@@ -72,7 +60,7 @@
    ((executable-find "python2")
     (setq python-shell-interpreter "python2"))
    (t
-    (setq python-shell-interpreter "python"))))
+    (setq python-shell-interpreter "python3"))))
 
 ;; Hide the modeline for inferior python processes
 (use-package inferior-python-mode
@@ -107,7 +95,11 @@
   :ensure t
   :defer t
   :config
-  (setq lsp-clients-python-library-directories '("C:\\Users\\HZ\\.conda\\pkgs" "C:\\ProgramData\\Miniconda3\\pkgs"))
+  (setq lsp-clients-python-library-directories
+	'("C:\\Users\\HZ\\.conda\\pkgs"
+	  "C:\\ProgramData\\Miniconda3\\pkgs"
+	  "C:\\ProgramData\\Miniconda3\\Lib"
+	  "C:\\ProgramData\\Miniconda3\\Lib\site-packages"))
   (setq lsp-pyright-disable-language-service nil
 	lsp-pyright-disable-organize-imports nil
 	lsp-pyright-auto-import-completions t

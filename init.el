@@ -2,7 +2,19 @@
                          ("melpa"        . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
                          ("melpa-stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/")
                          ("org"          . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
-(setq url-proxy-services '(("http" . "localhost:58591") ("http" . "localhost:58591")))
+
+;; Start as a server when first start
+(server-start)
+
+;; disable toolbar
+(tool-bar-mode -1)
+
+;;disable menubar
+(menu-bar-mode -1)
+
+;; disable scrollbar
+(scroll-bar-mode -1)
+
 (package-initialize)
 (global-linum-mode)
 
@@ -10,12 +22,12 @@
 (toggle-truncate-lines 1)
 
 ;; Setting English Font
-(set-face-attribute 'default nil :font "Source Code Pro-10")
+(set-face-attribute 'default nil :font "SauceCodePro Nerd Font-10")
 ;; Setting Chinese Font
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font (frame-parameter nil 'font)
 		    charset
-		    (font-spec :family "仿宋" :size 15))) 
+		    (font-spec :family "宋体" :size 16))) 
 
 (require 'use-package)
 
@@ -26,11 +38,18 @@
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "C:\\Pandoc\\pandoc.exe"))
-
-(use-package solarized-theme
+;; (use-package dracula-theme
+;;   :ensure t
+;;   :init
+;;   (load-theme 'dracula t))
+(use-package inkpot-theme
   :ensure t
   :init
-  (load-theme 'solarized-light t))
+  (load-theme 'inkpot t))
+;; (use-package solarized-theme
+;;   :ensure t
+;;   :init
+;;   (load-theme 'solarized-light t))
 ;;(use-package which-key :ensure t)
 (use-package counsel
 	     :ensure t)
@@ -57,49 +76,81 @@
 (global-set-key (kbd "C-c k") 'counsel-ag)
 (global-set-key (kbd "C-x l") 'counsel-locate)
 (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+(global-set-key (kbd "C-c s") 'counsel-etags-grep)
 (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
-;;(use-package typescript-mode :ensure t)
-;;(use-package js2-mode :ensure t)
-;;(use-package rjsx-mode :ensure t)
-
-;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-(setq lsp-keymap-prefix "C-l")
 
 (use-package lsp-mode
   :ensure t
+  :commands (lsp lsp-deferred)
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
        	 (go-mode . lsp-deferred)
          (c++-mode . lsp-deferred)
 	 (python-mode . lsp-deferred)
-;;         (js2-mode . lsp-deferred)
-;;	 (php-mode . lsp-deferred)
-;;	 (typescript-mode . lsp-deferred)
-;;	 (rjsx-mode . lsp-deferred)
-;;	 (css-mode . lsp-deferred)
-;;	 (web-mode . lsp-deferred)
-;;	 (ruby-mode . lsp-deferred)
+	 (yaml-mode . lsp-deferred)
          ;; if you want which-key integration
-         ;; (lsp-mode . lsp-enable-which-key-integration))
-	 )
-  :commands (lsp lsp-deferred))
-;;Set up before-save hooks to format buffer and add/delete imports.
-;;Make sure you don't have other gofmt/goimports hooks enabled.
+         (lsp-mode . lsp-enable-which-key-integration))
+  :custom
+  (lsp-diagnostics-provider :capf)
+  (lsp-headerline-breadcrumb-enable t)
+  (lsp-headerline-breadcrumb-segments '(project file symbols))
+  (lsp-lens-enable nil)
+  (lsp-disabled-clients '((python-mode . pyls)))
+  :init
+  (setq lsp-keymap-prefix "C-l") ;; Or 'C-l', 's-l'
+  :commands (lsp lsp-deferred)
+  )
 
-(defun lsp-go-install-save-hooks ()
-  (add-hook 'before-save-hook #'lsp-format-buffer t t)
-  (add-hook 'before-save-hook #'lsp-organize-imports t t))
-(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+;; The default is 800 kilobytes. Measured in bytes
+(setq gc-cons-threshold (* 100 1024 1024)) ;; 100 MB
+(setq read-process-output-max (* 1 1024 1024)) ;; 1MB
+
+(use-package projectile
+  :diminish projectile-mode
+  :hook
+  (after-init . projectile-mode)
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
+  :init
+  ;; NOTE: Set this to the folder where you keep your Git repos!
+  (setq projectile-project-search-path '("~/foo/projects" "~/foo/reports"))
+  (setq projectile-switch-project-action #'projectile-dired)
+  :custom
+  (projectile-completion-system 'ivy)
+  (projectile-dynamic-mode-line nil)
+  (projectile-enable-caching t)
+  (projectile-indexing-method 'hybrid)
+  (projectile-track-known-projects-automatically nil))
+
+(use-package counsel-projectile
+  :ensure t
+  :config (counsel-projectile-mode))
+
+(use-package eldoc
+  :ensure t
+  :diminish eldoc-mode
+  )
 
 ;; optionally
 (use-package lsp-ui
-  :ensure t
-  :commands lsp-ui-mode)
+  :hook (lsp-mode . lsp-ui-mode)
+  :after lsp-mode
+  :custom
+  (lsp-ui-doc-show-with-cursor nil)
+  :config
+  (setq lsp-ui-doc-position 'bottom))
 ;; if you are helm user
 (use-package helm-lsp
   :commands helm-lsp-workspace-symbol)
 ;; if you are ivy user
-(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
-(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+(use-package lsp-ivy
+  :ensure t
+  :commands lsp-ivy-workspace-symbol)
+(use-package lsp-treemacs
+  :ensure t
+  :after
+  (lsp-mode treemacs)
+  :commands
+  lsp-treemacs-errors-list)
 (use-package yasnippet :ensure t)
 (yas-global-mode 1)
 (yas-reload-all)
@@ -114,7 +165,6 @@
   :ensure t
   :config
   (which-key-mode))
-
 ;;Company mode is a standard completion package that works well with lsp-mode.
 ;;company-lsp integrates company mode completion with lsp-mode.
 ;;completion-at-point also works out of the box but doesn't support snippets.
@@ -132,36 +182,45 @@
   :hook ((c-mode c++-mode objc-mode cuda-mode) . (lambda () (require 'ccls) (lsp))))
 (setq ccls-executable "/usr/bin/ccls")
 
+(require 'font-lock)
+
+(use-package all-the-icons
+  :ensure t
+  :if (display-graphic-p))
+
 ;;Golang
+
+;;Set up before-save hooks to format buffer and add/delete imports.
+;;Make sure you don't have other gofmt/goimports hooks enabled.
+(use-package go-mode
+  :ensure t
+  :mode (("\\.go\\'" . go-mode))
+  :init
+  (add-hook 'go-mode-hook
+	    (lambda ()
+	      (setq tab-width 4)
+              (setq indent-tabs-mode nil)
+	      (add-hook 'before-save #'lsp-format-buffer t t)
+	      (add-hook 'before-save #'lsp-organize-imports t t)))
+  :hook
+  ((outline-mode . go-mode)))
+;; (defun lsp-go-install-save-hooks ()
+;;   (add-hook 'before-save-hook #'lsp-format-buffer t t)
+;;   (add-hook 'before-save-hook #'lsp-organize-imports t t))
+;; (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
+;; Set up before-save hooks to format buffer and add/delete imports.
+;; Make sure you don't have other gofmt/goimports hooks enabled.
 ;;(defun lsp-go-install-save-hooks ()
 ;;  (add-hook 'before-save-hook #'lsp-format-buffer t t)
 ;;  (add-hook 'before-save-hook #'lsp-organize-imports t t))
-;;(use-package go-mode
-;;  :ensure t
-;;  :mode (("\\.go\\'" . go-mode))
-;;  ;;:init
-;;  ;;(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
-;;  :hook
-;;  ((before-save . #'lsp-format-buffer)
-;;   (before-save . #'lsp-organize-imports)))
-;;JavaScript, TypeScript, CoffeeScript
-;;(use-package tide
-;;  :ensure t
-;;  :init
-;;  (setq tide-tsserver-executable "/usr/bin/tsserver"))
-;;(defun setup-tide-mode()
-;;  (interactive)
-;;  (tide-setup)
-;;  (flycheck-mode +1)
-;;  (setq flycheck-check-syntax-automatically '(save-mode-enable))
-;;  (tide-hl-identifier-mode +1)
-;;  (company-mode +1))
-;;(setq company-tooltip-align-annotations t)
-;;(add-hook 'before-save-hook 'tide-format-before-save)
-;;(add-hook 'typescript-mode-hook #'setup-tide-mode)
-;;(add-hook 'js2-mode-hook #'setup-tide-mode)
-;;(flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append)
-;;
+;;(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
+;; For yaml
+(use-package yaml-mode
+  :ensure t
+  :mode (("\\.yaml\\'" . yaml-mode)))
+
 ;;For ruby
 (setq ruby-ls "solargraph")
 (add-to-list 'load-path "~/.emacs.d/elpa/solargraph/")
@@ -171,21 +230,6 @@
 
 (require 'ac-solargraph)
 ;;(define-key ruby-mode-map (kbd "M-i") 'solargraph:complete)
-;;(require 'tide)
-
-;;(dolist (hook (list
-;;               'js2-mode-hook
-;;               'rjsx-mode-hook
-;;               'typescript-mode-hook
-;;               ))
-;;  (add-hook hook (lambda ()
-;;                   ;; 初始化 tide
-;;                   (tide-setup)
-;;                   ;; 当 tsserver 服务没有启动时自动重新启动
-;;                   (unless (tide-current-server)
-;;                     (tide-restart-server))
-;;                   )))
-;;
 
 (setq default-tab-width 4)
 (setq tab-width 4)
@@ -199,8 +243,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("0ab2aa38f12640ecde12e01c4221d24f034807929c1f859cbca444f7b0a98b3a" "776c1ab52648f98893a2aa35af2afc43b8c11dd3194a052e0b2502acca02bfce" "7f1d414afda803f3244c6fb4c2c64bea44dac040ed3731ec9d75275b9e831fe5" "51ec7bfa54adf5fff5d466248ea6431097f5a18224788d0bd7eb1257a4f7b773" "d6692db3e3ba6dbfd61473ad89794abe234fa2eceed977dcff279fda96316e2e" default))
  '(package-selected-packages
-   '(grip-mode reveal-in-osx-finder org-re-reveal-ref solarized-theme swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy company-lsp lsp-ivy flycheck lsp-ui dap-mode lsp-mode slime python-mode lorem-ipsum)))
+   '(counsel-projectile dracula-theme ubuntu-theme cedit inkpot-theme counsel-gtags all-the-icons-dired all-the-icons-ibuffer spaceline-all-the-icons treemacs treemacs-icons-dired pcre2el 0blayout treemacs-all-the-icons counsel-etags ipython-shell-send grip-mode reveal-in-osx-finder org-re-reveal-ref solarized-theme swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy company-lsp lsp-ivy flycheck lsp-ui dap-mode lsp-mode slime python-mode lorem-ipsum))
+ '(safe-local-variable-values '((encoding . utf-8))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
