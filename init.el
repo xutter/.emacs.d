@@ -42,9 +42,6 @@
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "C:\\prog\\Pandoc\\pandoc.exe"))
 
-(use-package solarized-theme
-  :ensure t)
-
 (use-package inkpot-theme
   :ensure t
   :init
@@ -82,8 +79,30 @@
 (global-set-key (kbd "C-;") 'comment-line)
 (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
 
-;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-(setq lsp-keymap-prefix "C-l")
+(use-package projectile
+  :diminish projectile-mode
+  :hook
+  (after-init . projectile-mode)
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
+  :init
+  ;; NOTE: Set this to the folder where you keep your Git repos!
+  (setq projectile-project-search-path '("~/foo/projects" "~/foo/reports"))
+  (setq projectile-switch-project-action #'projectile-dired)
+  :custom
+  (projectile-completion-system 'ivy)
+  (projectile-dynamic-mode-line nil)
+  (projectile-enable-caching t)
+  (projectile-indexing-method 'hybrid)
+  (projectile-track-known-projects-automatically nil))
+
+(use-package counsel-projectile
+  :ensure t
+  :config (counsel-projectile-mode))
+
+(use-package eldoc
+  :ensure t
+  :diminish eldoc-mode)
 
 (use-package lsp-mode
   :ensure t
@@ -91,23 +110,50 @@
        	 (go-mode . lsp-deferred)
          (c++-mode . lsp-deferred)
 	 (python-mode . lsp-deferred)
-	 (yaml-mode . lsp-deferred))
+	 (yaml-mode . lsp-deferred)
+         (lsp-mode . lsp-enable-which-key-integration))
+  :custom
+  (lsp-diagnostics-provider :capf)
+  (lsp-headerline-breadcrumb-enable t)
+  (lsp-headerline-breadcrumb-segments '(project file symbols))
+  (lsp-lens-enable nil)
+  (lsp-disabled-clients '((python-mode . pyls)))
+  :init
+  (setq lsp-keymap-prefix "C-l") ;; Or 'C-l', 's-l'
   :commands (lsp lsp-deferred))
 ;;Set up before-save hooks to format buffer and add/delete imports.
 ;;Make sure you don't have other gofmt/goimports hooks enabled.
 
-;; optionally
+;; Provides visual help in the buffer 
+;; For example definitions on hover. 
+;; The `imenu` lets me browse definitions quickly.
 (use-package lsp-ui
   :ensure t
-  :commands lsp-ui-mode)
+  :defer t
+  :after lsp-mode
+  :custom
+  (lsp-ui-doc-show-with-cursor nil)
+  :config
+  (setq lsp-ui-sideline-enable nil
+	lsp-ui-doc-delay 2
+	lsp-ui-doc-position 'bottom)
+  :hook (lsp-mode . lsp-ui-mode)
+  :bind (:map lsp-ui-mode-map
+	      ("C-c i" . lsp-ui-imenu)))
+
 ;; if you are helm user
 (use-package helm-lsp
+  :ensure t
   :commands helm-lsp-workspace-symbol)
 ;; if you are ivy user
 (use-package lsp-ivy
+  :ensure t
   :commands lsp-ivy-workspace-symbol)
 
 (use-package lsp-treemacs
+  :ensure t
+  :after
+  (lsp-mode treemacs)
   :commands lsp-treemacs-errors-list)
 
 (use-package yasnippet
@@ -115,20 +161,20 @@
 (yas-global-mode 1)
 (yas-reload-all)
 (add-hook 'prog-mode-hook #'yas-minor-mode)
-;; optionally if you want to use debugger
-(use-package dap-mode
-  :ensure t)
-;; (use-package dap-LANGUAGE) to load the dap adapter for your language
 
 ;; optional if you want which-key integration
 (use-package which-key
   :ensure t
   :config
   (which-key-mode))
-;; add which-key support for lsp-mode
-(with-eval-after-load 'lsp-mode
-  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
 
+;; Integration with the debug server 
+(use-package dap-mode
+  :ensure t
+  :defer t
+  :after lsp-mode
+  :config
+  (dap-auto-configure-mode))
 
 ;;Company mode is a standard completion package that works well with lsp-mode.
 ;;company-lsp integrates company mode completion with lsp-mode.
@@ -136,9 +182,15 @@
 
 (use-package company
   :ensure t
+  :defer t
+  :diminish
   :config
-  (setq company-idle-delay 0)
-  (setq company-minimum-prefix-length 1))
+  (setq company-dabbrev-other-buffers t
+        company-dabbrev-code-other-buffers t
+	company-idle-delay 0
+	company-minimum-prefix-length 1)
+  :hook ((text-mode . company-mode)
+         (prog-mode . company-mode)))
 
 (use-package company-lsp
   :ensure t
@@ -162,14 +214,77 @@
               (setq tab-width 4)
               (setq indent-tabs-mode nil)
 	      (add-hook 'before-save-hook #'lsp-format-buffer t t)
-	      (add-hook 'before-save-hook #'lsp-organize-imports t t))))
+	      (add-hook 'before-save-hook #'lsp-organize-imports t t)))
+  :hook
+  ((outline-mode . go-mode)))
+;; Built-in Python utilities
+(use-package python
+  :ensure t
+  :config
+  ;; Remove guess indent python message
+  (setq python-indent-guess-indent-offset-verbose nil)
+  ;; Use IPython when available or fall back to regular Python 
+  (cond
+   ((executable-find "ipython")
+    (progn
+      (setq python-shell-buffer-name "IPython")
+      (setq python-shell-interpreter "ipython")
+      (setq python-shell-interpreter-args "-i --simple-prompt")))
+   ((executable-find "python3")
+    (setq python-shell-interpreter "python3"))
+   ((executable-find "python2")
+    (setq python-shell-interpreter "python2"))
+   (t
+    (setq python-shell-interpreter "python3"))))
 
+;; Hide the modeline for inferior python processes
+(use-package inferior-python-mode
+  :ensure nil
+  :hook (inferior-python-mode . hide-mode-line-mode))
+
+;; Required to hide the modeline 
+(use-package hide-mode-line
+  :ensure t
+  :defer t)
+;; Required to easily switch virtual envs 
+;; via the menu bar or with `pyvenv-workon` 
+;; Setting the `WORKON_HOME` environment variable points 
+;; at where the envs are located. I use miniconda. 
+(use-package pyvenv
+  :ensure t
+  :defer t
+  :config
+  ;; Setting work on to easily switch between environments
+  (setenv "WORKON_HOME" (expand-file-name "C:\\prog\\Miniconda3\\envs"))
+  ;; Display virtual envs in the menu bar
+  (setq pyvenv-menu t)
+  ;; Restart the python process when switching environments
+  (add-hook 'pyvenv-post-activate-hooks (lambda ()
+					  (pyvenv-restart-python)))
+  :hook (python-mode . pyvenv-mode))
 ;; Python pyright
 (use-package lsp-pyright
   :ensure t
+  :defer t
+  :config
+  (setq lsp-clients-python-library-directories
+	'("C:\\prog\\Miniconda3\\pkgs"
+	  "C:\\prog\\Miniconda3\\Lib"
+	  "C:\\proj\\Miniconda3\\Lib\site-packages"))
+  (setq lsp-pyright-disable-language-service nil
+	lsp-pyright-disable-organize-imports nil
+	lsp-pyright-auto-import-completions t
+	lsp-pyright-use-library-code-for-types t
+	lsp-pyright-auto-search-paths t
+	lsp-pyright-venv-path "C:\\ProgramData\\Miniconda3\\envs")
   :hook (python-mode . (lambda ()
                           (require 'lsp-pyright)
                           (lsp))))  ; or lsp-deferred
+
+(require 'font-lock)
+(use-package all-the-icons
+  :ensure t
+  :if (display-graphic-p))
 
 ;;For ruby
 (setq ruby-ls "solargraph")
@@ -197,7 +312,7 @@
  '(custom-safe-themes
    '("e7ba99d0f4c93b9c5ca0a3f795c155fa29361927cadb99cfce301caf96055dfd" "3b8284e207ff93dfc5e5ada8b7b00a3305351a3fb222782d8033a400a48eca48" "d6692db3e3ba6dbfd61473ad89794abe234fa2eceed977dcff279fda96316e2e" default))
  '(package-selected-packages
-   '(lsp-pyright twilight-theme zenburn-theme inkpot-theme all-the-icons-dired all-the-icons-ivy all-the-icons-completion all-the-icons-ibuffer all-the-icons-ivy-rich treemacs-all-the-icons all-the-icons counsel-etags yaml-mode yaml pcre2el auto-complete reveal-in-osx-finder org-re-reveal-ref solarized-theme swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy company-lsp lsp-ivy flycheck lsp-ui dap-mode lsp-mode slime python-mode lorem-ipsum)))
+   '(counsel-projectile lsp-pyright twilight-theme zenburn-theme inkpot-theme all-the-icons-dired all-the-icons-ivy all-the-icons-completion all-the-icons-ibuffer all-the-icons-ivy-rich treemacs-all-the-icons all-the-icons counsel-etags yaml-mode yaml pcre2el auto-complete reveal-in-osx-finder org-re-reveal-ref solarized-theme swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy company-lsp lsp-ivy flycheck lsp-ui dap-mode lsp-mode slime python-mode lorem-ipsum)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
