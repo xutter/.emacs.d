@@ -109,8 +109,9 @@
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
        	 (go-mode . lsp-deferred)
          (c++-mode . lsp-deferred)
-	 (python-mode . lsp-deferred)
-	 (yaml-mode . lsp-deferred)
+	     (python-mode . lsp-deferred)
+         (yaml-mode . lsp-deferred)
+         (tex-mode .lsp-deferred)
          (lsp-mode . lsp-enable-which-key-integration))
   :custom
   (lsp-diagnostics-provider :capf)
