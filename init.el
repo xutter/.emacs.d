@@ -6,7 +6,14 @@
 (server-start)
 
 (tool-bar-mode -1)
+
 (menu-bar-mode -1)
+
+;; Show paren 
+(show-paren-mode 1)
+
+;; Disable error alert
+(setq visible-bell 1)
 
 (package-initialize)
 (global-linum-mode)
@@ -16,7 +23,7 @@
 
 ;;(when (member "Source Code Pro" (font-family-list))
 ;;  (set-frame-font "Source Code Pro-10" t t))
- ;; ============================================================
+;; ============================================================
 ;; Setting English Font
 (set-face-attribute 'default nil :font "SauceCodePro Nerd Font-12")
 (set-fontset-font t 'unicode "Segoe UI Emoji" nil 'prepend)
@@ -109,9 +116,9 @@
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
        	 (go-mode . lsp-deferred)
          (c++-mode . lsp-deferred)
-	     (python-mode . lsp-deferred)
+	 (python-mode . lsp-deferred)
          (yaml-mode . lsp-deferred)
-         (tex-mode .lsp-deferred)
+         ;; (tex-mode .lsp-deferred)
          (lsp-mode . lsp-enable-which-key-integration))
   :custom
   (lsp-diagnostics-provider :capf)
@@ -205,6 +212,18 @@
   :ensure t
   :mode (("\\.yaml\\'" . yaml-mode)))
 
+;; Latex
+(use-package lsp-latex
+  :ensure t
+  :config
+  (with-eval-after-load "tex-mode"
+    (add-hook 'tex-mode-hook 'lsp)
+    (add-hook 'latex-mode-hook 'lsp))
+  (with-eval-after-load "yatex"
+    (add-hook 'yatex-mode-hook 'lsp))
+  (with-eval-after-load "bibtex"
+    (add-hook 'bibtex-mode-hook 'lsp)))
+
 ;;Golang
 (use-package go-mode
   :ensure t
@@ -279,8 +298,8 @@
 	lsp-pyright-auto-search-paths t
 	lsp-pyright-venv-path "C:\\ProgramData\\Miniconda3\\envs")
   :hook (python-mode . (lambda ()
-                          (require 'lsp-pyright)
-                          (lsp))))  ; or lsp-deferred
+                         (require 'lsp-pyright)
+                         (lsp))))  ; or lsp-deferred
 
 (require 'font-lock)
 (use-package all-the-icons
@@ -313,7 +332,7 @@
  '(custom-safe-themes
    '("e7ba99d0f4c93b9c5ca0a3f795c155fa29361927cadb99cfce301caf96055dfd" "3b8284e207ff93dfc5e5ada8b7b00a3305351a3fb222782d8033a400a48eca48" "d6692db3e3ba6dbfd61473ad89794abe234fa2eceed977dcff279fda96316e2e" default))
  '(package-selected-packages
-   '(counsel-projectile lsp-pyright twilight-theme zenburn-theme inkpot-theme all-the-icons-dired all-the-icons-ivy all-the-icons-completion all-the-icons-ibuffer all-the-icons-ivy-rich treemacs-all-the-icons all-the-icons counsel-etags yaml-mode yaml pcre2el auto-complete reveal-in-osx-finder org-re-reveal-ref solarized-theme swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy company-lsp lsp-ivy flycheck lsp-ui dap-mode lsp-mode slime python-mode lorem-ipsum)))
+   '(lsp-latex counsel-projectile lsp-pyright twilight-theme zenburn-theme inkpot-theme all-the-icons-dired all-the-icons-ivy all-the-icons-completion all-the-icons-ibuffer all-the-icons-ivy-rich treemacs-all-the-icons all-the-icons counsel-etags yaml-mode yaml pcre2el auto-complete reveal-in-osx-finder org-re-reveal-ref solarized-theme swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy company-lsp lsp-ivy flycheck lsp-ui dap-mode lsp-mode slime python-mode lorem-ipsum)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

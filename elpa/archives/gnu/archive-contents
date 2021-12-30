@@ -1646,7 +1646,7 @@
 			  ("Protesilaos Stavrou" . "info@protesilaos.com"))
 			 (:keywords "faces" "theme" "accessibility"))])
  (modus-themes .
-	       [(1 7 0)
+	       [(2 0 0)
 		((emacs
 		  (27 1)))
 		"Highly accessible themes (WCAG AAA)" tar
@@ -1743,7 +1743,7 @@
 		(:keywords "convenience" "org-mode" "org-agenda")
 		(:maintainer "Nicolas P. Rougier" . "Nicolas.Rougier@inria.fr"))])
  (nano-modeline .
-		[(0 2)
+		[(0 3)
 		 ((emacs
 		   (27 1)))
 		 "N Λ N O modeline" tar
@@ -1851,7 +1851,7 @@
 	      (:maintainer "Michael Heerdegen" . "michael_heerdegen@web.de")
 	      (:url . "https://github.com/michael-heerdegen/on-screen.el"))])
  (org .
-      [(9 5 1)
+      [(9 5 2)
        ((emacs
 	 (25 1)))
        "Outline-based notes management and organizer" tar
@@ -2067,9 +2067,9 @@
 	       ("Scott Andrew Borton" . "scott@pp.htv.fi"))
 	      (:maintainer "John Darrington" . "john@darrington.wattle.id.au"))])
  (pyim .
-       [(3 9 6)
+       [(3 9 7)
 	((emacs
-	  (24 4))
+	  (25 1))
 	 (async
 	  (1 6))
 	 (xr
