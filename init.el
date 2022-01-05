@@ -85,6 +85,11 @@
 (global-set-key (kbd "C-c t") 'treemacs)
 (global-set-key (kbd "C-;") 'comment-line)
 (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
+(setq debug-on-error 1)
+(use-package treemacs
+  :ensure t
+  :config
+  (setq treemacs-python-executable "c:/prog/Miniconda3/python.exe"))
 
 (use-package projectile
   :diminish projectile-mode
@@ -94,7 +99,7 @@
   ("C-c p" . projectile-command-map)
   :init
   ;; NOTE: Set this to the folder where you keep your Git repos!
-  (setq projectile-project-search-path '("~/foo/projects" "~/foo/reports"))
+  (setq projectile-project-search-path '("E:\\git\\" "E:\\test\\" "E:\\workspace\\"))
   (setq projectile-switch-project-action #'projectile-dired)
   :custom
   (projectile-completion-system 'ivy)
@@ -302,6 +307,7 @@
                          (lsp))))  ; or lsp-deferred
 
 (require 'font-lock)
+
 (use-package all-the-icons
   :ensure t
   :if (display-graphic-p))
@@ -332,7 +338,8 @@
  '(custom-safe-themes
    '("e7ba99d0f4c93b9c5ca0a3f795c155fa29361927cadb99cfce301caf96055dfd" "3b8284e207ff93dfc5e5ada8b7b00a3305351a3fb222782d8033a400a48eca48" "d6692db3e3ba6dbfd61473ad89794abe234fa2eceed977dcff279fda96316e2e" default))
  '(package-selected-packages
-   '(lsp-latex counsel-projectile lsp-pyright twilight-theme zenburn-theme inkpot-theme all-the-icons-dired all-the-icons-ivy all-the-icons-completion all-the-icons-ibuffer all-the-icons-ivy-rich treemacs-all-the-icons all-the-icons counsel-etags yaml-mode yaml pcre2el auto-complete reveal-in-osx-finder org-re-reveal-ref solarized-theme swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy company-lsp lsp-ivy flycheck lsp-ui dap-mode lsp-mode slime python-mode lorem-ipsum)))
+   '(lsp-latex counsel-projectile lsp-pyright twilight-theme zenburn-theme inkpot-theme all-the-icons-dired all-the-icons-ivy all-the-icons-completion all-the-icons-ibuffer all-the-icons-ivy-rich treemacs-all-the-icons all-the-icons counsel-etags yaml-mode yaml pcre2el auto-complete reveal-in-osx-finder org-re-reveal-ref solarized-theme swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy company-lsp lsp-ivy flycheck lsp-ui dap-mode lsp-mode slime python-mode lorem-ipsum))
+ '(safe-local-variable-values '((encoding . utf-8))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
