@@ -1,47 +1,3 @@
-;; Provides workspaces with file browsing (tree file viewer)
-;; and project management when coupled with `projectile`.
-
-(use-package treemacs
-  :ensure t
-  :defer t
-  :config
-  (setq treemacs-width 36)
-  :bind ("C-c t" . treemacs))
-
-;; Provides completion, with the proper backend
-;; it will provide Python completion.
-
-(use-package company
-  :ensure t
-  :defer t
-  :diminish
-  :config
-  (setq company-dabbrev-other-buffers t
-        company-dabbrev-code-other-buffers t)
-  :hook ((text-mode . company-mode)
-         (prog-mode . company-mode)))
-
-;; Provides visual help in the buffer 
-;; For example definitions on hover. 
-;; The `imenu` lets me browse definitions quickly.
-(use-package lsp-ui
-  :ensure t
-  :defer t
-  :config
-  (setq lsp-ui-sideline-enable nil
-	    lsp-ui-doc-delay 2)
-  :hook (lsp-mode . lsp-ui-mode)
-  :bind (:map lsp-ui-mode-map
-	      ("C-c i" . lsp-ui-imenu)))
-
-;; Integration with the debug server 
-(use-package dap-mode
-  :ensure t
-  :defer t
-  :after lsp-mode
-  :config
-  (dap-auto-configure-mode))
-
 ;; Built-in Python utilities
 (use-package python
   :ensure t
@@ -109,9 +65,11 @@
   :hook ((python-mode . (lambda () 
                           (require 'lsp-pyright) (lsp-deferred)))))
 
-;; Format the python buffer following YAPF rules
-;; There's also blacken if you like it better.
-(use-package yapfify
-  :ensure t
-  :defer t
-  :hook (python-mode . yapf-mode))
+
+
+
+
+
+
+
+

@@ -1,6 +1,6 @@
 (setq package-archives '(("gnu"          . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
                          ("melpa"        . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-                         ("melpa-stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/")
+                         ("stable-melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/stable-melpa/")
                          ("org"          . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
 
 ;; Start as a server when first start
@@ -14,6 +14,12 @@
 
 ;; disable scrollbar
 (scroll-bar-mode -1)
+
+;; show parenthesis matching
+(show-paren-mode 1)
+
+;; disable 
+(setq visible-bell 0)
 
 (package-initialize)
 (global-linum-mode)
@@ -46,11 +52,11 @@
   :ensure t
   :init
   (load-theme 'inkpot t))
-;; (use-package solarized-theme
-;;   :ensure t
-;;   :init
-;;   (load-theme 'solarized-light t))
-;;(use-package which-key :ensure t)
+(use-package solarized-theme
+  :disabled
+  :init
+  (load-theme 'solarized-light t))
+
 (use-package counsel
 	     :ensure t)
 (use-package swiper
@@ -77,16 +83,20 @@
 (global-set-key (kbd "C-x l") 'counsel-locate)
 (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
 (global-set-key (kbd "C-c s") 'counsel-etags-grep)
+(global-set-key (kbd "C-;")   'comment-line)
 (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
 
 (use-package lsp-mode
   :ensure t
-  :commands (lsp lsp-deferred)
+  :commands
+  (lsp lsp-deferred)
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
        	 (go-mode . lsp-deferred)
+	 (c-mode . lsp-deferred)
          (c++-mode . lsp-deferred)
 	 (python-mode . lsp-deferred)
 	 (yaml-mode . lsp-deferred)
+	 (latex-mode . lsp-deferred)
          ;; if you want which-key integration
          (lsp-mode . lsp-enable-which-key-integration))
   :custom
@@ -97,13 +107,16 @@
   (lsp-disabled-clients '((python-mode . pyls)))
   :init
   (setq lsp-keymap-prefix "C-l") ;; Or 'C-l', 's-l'
-  :commands (lsp lsp-deferred)
-  )
+  :commands
+  (lsp lsp-deferred))
 
 ;; The default is 800 kilobytes. Measured in bytes
-(setq gc-cons-threshold (* 100 1024 1024)) ;; 100 MB
-(setq read-process-output-max (* 1 1024 1024)) ;; 1MB
-
+(setq gc-cons-threshold (* 100 1024 1024) ;; 100 MB
+      read-process-output-max (* 1 1024 1024) ;; 1MB
+      treemacs-space-between-root-nodes nil
+      company-idle-delay 0.0
+      company-minimum-prefix-length 1
+      lsp-idle-delay 0.1) ;; clangd is fast
 (use-package projectile
   :diminish projectile-mode
   :hook
@@ -112,7 +125,7 @@
   ("C-c p" . projectile-command-map)
   :init
   ;; NOTE: Set this to the folder where you keep your Git repos!
-  (setq projectile-project-search-path '("~/foo/projects" "~/foo/reports"))
+  (setq projectile-project-search-path '("D:\\git\\" "D:\\CodeWarehouse"))
   (setq projectile-switch-project-action #'projectile-dired)
   :custom
   (projectile-completion-system 'ivy)
@@ -130,14 +143,22 @@
   :diminish eldoc-mode
   )
 
-;; optionally
+;; Provides visual help in the buffer 
+;; For example definitions on hover. 
+;; The `imenu` lets me browse definitions quickly.
 (use-package lsp-ui
+  :ensure t
+  :defer t
   :hook (lsp-mode . lsp-ui-mode)
-  :after lsp-mode
   :custom
   (lsp-ui-doc-show-with-cursor nil)
   :config
-  (setq lsp-ui-doc-position 'bottom))
+  (setq lsp-ui-doc-position 'bottom
+	lsp-ui-sideline-enable nil
+	lsp-ui-doc-delay 2)
+  :bind (:map lsp-ui-mode-map
+	      ("C-c i" . lsp-ui-imenu)))
+
 ;; if you are helm user
 (use-package helm-lsp
   :commands helm-lsp-workspace-symbol)
@@ -155,32 +176,51 @@
 (yas-global-mode 1)
 (yas-reload-all)
 (add-hook 'prog-mode-hook #'yas-minor-mode)
-;; optionally if you want to use debugger
+
+;; Integration with the debug server 
 (use-package dap-mode
-  :ensure t)
-;; (use-package dap-LANGUAGE) to load the dap adapter for your language
+  :ensure t
+  :defer t
+  :after lsp-mode
+  :config
+  (dap-auto-configure-mode))
+
+(use-package dap-cpptools) ;;to load the dap adapter for your language
 
 ;; optional if you want which-key integration
 (use-package which-key
   :ensure t
   :config
   (which-key-mode))
+
+;; Provides workspaces with file browsing (tree file viewer)
+;; and project management when coupled with `projectile`.
+
+(use-package treemacs
+  :ensure t
+  :defer t
+  :config
+  (setq treemacs-width 36)
+  :bind ("C-c t" . treemacs))
+
 ;;Company mode is a standard completion package that works well with lsp-mode.
 ;;company-lsp integrates company mode completion with lsp-mode.
 ;;completion-at-point also works out of the box but doesn't support snippets.
-
+;; Provides completion, with the proper backend
+;; it will provide Python completion.
 (use-package company
   :ensure t
+  :defer t
+  :diminish
   :config
-  (setq company-idle-delay 0)
-  (setq company-minimum-prefix-length 1))
-(use-package company-lsp
-  :ensure t
-  :commands company-lsp)
-
-(use-package ccls
-  :hook ((c-mode c++-mode objc-mode cuda-mode) . (lambda () (require 'ccls) (lsp))))
-(setq ccls-executable "/usr/bin/ccls")
+  (setq company-idle-delay 0
+        company-minimum-prefix-length 1
+	company-dabbrev-other-buffers t
+        company-dabbrev-code-other-buffers t
+	lsp-completion-provider :capf)
+  :hook ((text-mode . company-mode)
+         (prog-mode . company-mode)
+	 (scala-mode . company-mode)))
 
 (require 'font-lock)
 
@@ -199,29 +239,37 @@
   (add-hook 'go-mode-hook
 	    (lambda ()
 	      (setq tab-width 4)
-              (setq indent-tabs-mode nil)
-	      (add-hook 'before-save #'lsp-format-buffer t t)
-	      (add-hook 'before-save #'lsp-organize-imports t t)))
+              (setq indent-tabs-mode nil)))
   :hook
   ((outline-mode . go-mode)))
-;; (defun lsp-go-install-save-hooks ()
-;;   (add-hook 'before-save-hook #'lsp-format-buffer t t)
-;;   (add-hook 'before-save-hook #'lsp-organize-imports t t))
-;; (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 
 ;; Set up before-save hooks to format buffer and add/delete imports.
 ;; Make sure you don't have other gofmt/goimports hooks enabled.
-;;(defun lsp-go-install-save-hooks ()
-;;  (add-hook 'before-save-hook #'lsp-format-buffer t t)
-;;  (add-hook 'before-save-hook #'lsp-organize-imports t t))
-;;(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+(defun lsp-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 
 ;; For yaml
 (use-package yaml-mode
   :ensure t
-  :mode (("\\.yaml\\'" . yaml-mode)))
+  :mode (("\\.yaml\\'" . yaml-mode)
+	 ("\\.yml\\'" . yaml-mode)))
 
-;;For ruby
+;; For C++
+(setq lsp-clangd-binary-path "C:\\LLVM\\bin\\clangd.exe")
+(setq lsp-clients-clangd-library-directories
+      '("C:\\LLVM\\lib"
+	"C:\\Microsoft\ Visual\ Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\lib\\x64"
+	"C:\\Microsoft\ Visual\ Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\include"
+	"C:\\Program\ Files\ (x86)\\Windows Kits\\10\\Lib\\10.0.19041.0\\ucrt\\x64"
+	"C:\\Program\ Files\ (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\ucrt"
+	"C:\\Program\ Files\ (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\cppwinrt\\winrt"
+	"C:\\Program\ Files\ (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\shared"
+	"C:\\Program\ Files\ (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\um"
+	"C:\\Program\ Files\ (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\winrt"))
+
+;; For ruby
 (setq ruby-ls "solargraph")
 (add-to-list 'load-path "~/.emacs.d/elpa/solargraph/")
 (require 'solargraph)
@@ -238,6 +286,8 @@
 (setq indent-tab-mode nil)
 (setq inhibit-splash-screen t)
 (load-file "~/.emacs.d/python-config.el")
+(setq treemacs-python-executable "C:/ProgramData/Miniconda3/python.exe")
+;; (setq debug-on-error 1)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -246,7 +296,7 @@
  '(custom-safe-themes
    '("0ab2aa38f12640ecde12e01c4221d24f034807929c1f859cbca444f7b0a98b3a" "776c1ab52648f98893a2aa35af2afc43b8c11dd3194a052e0b2502acca02bfce" "7f1d414afda803f3244c6fb4c2c64bea44dac040ed3731ec9d75275b9e831fe5" "51ec7bfa54adf5fff5d466248ea6431097f5a18224788d0bd7eb1257a4f7b773" "d6692db3e3ba6dbfd61473ad89794abe234fa2eceed977dcff279fda96316e2e" default))
  '(package-selected-packages
-   '(counsel-projectile dracula-theme ubuntu-theme cedit inkpot-theme counsel-gtags all-the-icons-dired all-the-icons-ibuffer spaceline-all-the-icons treemacs treemacs-icons-dired pcre2el 0blayout treemacs-all-the-icons counsel-etags ipython-shell-send grip-mode reveal-in-osx-finder org-re-reveal-ref solarized-theme swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy company-lsp lsp-ivy flycheck lsp-ui dap-mode lsp-mode slime python-mode lorem-ipsum))
+   '(counsel-projectile dracula-theme ubuntu-theme cedit inkpot-theme counsel-gtags all-the-icons-dired all-the-icons-ibuffer spaceline-all-the-icons treemacs treemacs-icons-dired pcre2el 0blayout treemacs-all-the-icons counsel-etags ipython-shell-send grip-mode reveal-in-osx-finder org-re-reveal-ref solarized-theme swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy flycheck slime python-mode lorem-ipsum hydra helm-xref))
  '(safe-local-variable-values '((encoding . utf-8))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
