@@ -9,7 +9,7 @@
 ;; package
 (require 'package)
 (package-initialize)
-(package-refresh-contents)
+;; (package-refresh-contents)
 
 
 ;; load configure file, almost executable's path
