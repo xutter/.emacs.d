@@ -35,7 +35,7 @@
 ;; show cursor position within line
 (column-number-mode 1)
 ;; make lines wrap at word boundaries
-(global-visual-line-mode 1)
+;; (global-visual-line-mode 1)
 ;; nowrap the line
 (toggle-truncate-lines 1)
 
@@ -68,11 +68,23 @@
     (s-font))
 
 
+;; make sure use-package is install and required
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
 (require 'use-package)
 
 
+;; setting for git
 (use-package magit
   :ensure t)
+
+
+;; setting for ssh
+;; (use-package tramp
+;;   :ensure t
+;;   :init
+;;   (setq tramp-ssh-controlmaster-options
+;; 	"-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no"))
 
 
 (use-package markdown-mode
@@ -84,9 +96,8 @@
   :init (setq markdown-command "pandoc"))
 
 (use-package org
-  :ensure t
-  :init
-  (add-hook 'org-mode-hook 'outline-minor-mode)
+  :hook
+  ((org-mode-hook outline-minor-mode))
   :mode (("\\.org\\'" . org-mode)))
 
 (use-package org-bullets
@@ -149,7 +160,6 @@
 (global-set-key (kbd "C-;")   'comment-line)
 (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
 
-(add-hook 'minibuffer-inactive-mode-hook #'yas-minor-mode)
 
 ;; -------------------------------------------------------------
 (use-package lsp-mode
@@ -157,8 +167,7 @@
   :commands
   (lsp lsp-deferred)
   :hook
-  (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-   (go-mode . lsp-deferred)
+  ((go-mode . lsp-deferred)
    (c-mode . lsp-deferred)
    (c++-mode . lsp-deferred)
    (yaml-mode . lsp-deferred)
@@ -177,7 +186,13 @@
   (setq lsp-keymap-prefix "C-l") ;; Or 'C-l', 's-l'
   (setq lsp-log-io t)
   :commands
-  (lsp lsp-deferred))
+  (lsp lsp-deferred)
+  :config
+  (setq lsp-pyright-log-level "trace")
+  (setq lsp-enable-file-watchers nil)
+  (setq gc-cons-threshold (* 100 1024 1024))
+  (setq read-process-output-max (* 1 1024 1024))
+)
 
 
 ;; The default is 800 kilobytes. Measured in bytes
@@ -199,6 +214,9 @@
 	treemacs-python-executable python-path)
   :bind ("C-c t" . treemacs))
 
+
+(use-package diminish
+  :ensure t)
 
 (use-package projectile
   :diminish projectile-mode
@@ -224,9 +242,7 @@
 
 
 (use-package eldoc
-  :ensure t
-  :diminish eldoc-mode
-  )
+  :diminish eldoc-mode)
 
 
 ;; Provides visual help in the buffer 
@@ -272,11 +288,13 @@
   lsp-treemacs-errors-list)
 
 
-(use-package yasnippet :ensure t)
-(yas-global-mode 1)
-(yas-reload-all)
-(add-hook 'prog-mode-hook #'yas-minor-mode)
-
+(use-package yasnippet
+  :ensure t
+  :config
+  (yas-global-mode 1)
+  (yas-reload-all)
+  (add-hook 'minibuffer-inactive-mode-hook #'yas-minor-mode)
+  (add-hook 'prog-mode-hook #'yas-minor-mode))
 
 ;; Integration with the debug server 
 (use-package dap-mode
@@ -289,7 +307,6 @@
   (require 'dap-cpptools)
   (add-hook 'dap-stopped-hook
             (lambda (arg) (call-interactively #'dap-hydra))))
-
 
 
 ;; optional if you want which-key integration
@@ -325,11 +342,9 @@
   :ensure t
   :if (display-graphic-p))
 
-
-;;Golang
-;;Set up before-save hooks to format buffer and add/delete imports.
-;;Make sure you don't have other gofmt/goimports hooks enabled.
-
+;;;;;;;;;;;
+;; Golang
+;;;;;;;;;;;
 (use-package go-mode
   :ensure t
   :mode (("\\.go\\'" . go-mode))
@@ -349,14 +364,17 @@
 (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 
 
-;; For yaml
+;;;;;;;;;
+;; yaml
+;;;;;;;;;
 (use-package yaml-mode
   :ensure t
   :mode (("\\.yaml\\'" . yaml-mode)
 	 ("\\.yml\\'" . yaml-mode)))
 
-
-;; For C++
+;;;;;;;;
+;; C++
+;;;;;;;;
 (setq lsp-clangd-binary-path clangd-path)
 
 
@@ -366,14 +384,41 @@
 (setq c-basic-offset 4)
 (setq indent-tab-mode nil)
 (setq inhibit-splash-screen t)
-;; (setq debug-on-error 1)
+(setq debug-on-error 1)
 
 
-;; Language server for Python 
-;; Read the docs for the different variables set in the config.
+;;;;;;;;;;;
+;; Python
+;;;;;;;;;;;
 (use-package lsp-pyright
   :ensure t
   :defer t
+  :config
+  (lsp-register-client
+   (make-lsp-client
+    :new-connection
+    (lsp-tramp-connection
+     (lambda ()
+       (cons "pyright-langserver" ;; (executable-find "pyright-langserver" t)
+	     lsp-pyright-langserver-command-args)))
+    :major-modes '(python-mode)
+    :server-id 'pyright-remote
+    :remote? t
+    :multi-root lsp-pyright-multi-root
+    :priority -1
+    :initialization-options
+    (setq lsp--uri-file-prefix "file://")
+;;     :initialized-fn
+;;     (lambda (workspace)
+;;       (with-lsp-workspace workspace
+;; 	;; we send empty settings initially, LSP server will ask for the
+;; 	;; configuration of each workspace folder later separately
+;; 	(lsp--set-configuration
+;; 	 (make-hash-table :test 'equal))))
+    :notification-handlers
+    (lsp-ht ("pyright/beginProgress" 'lsp-pyright--begin-progress-callback)
+            ("pyright/reportProgress" 'lsp-pyright--report-progress-callback)
+            ("pyright/endProgress" 'lsp-pyright--end-progress-callback))))
   :hook
   (python-mode . (lambda ()
 		   (require 'lsp-pyright)
@@ -398,8 +443,6 @@
           (pyvenv-activate (lsp-pyright-locate-venv))
           (message "ACTIVATE_DIR: %s\n" (lsp-pyright-locate-venv))))))
 
-;; (add-hook 'python-mode-hook #'dd/py-auto-lsp)
-;; (add-hook 'lsp)
 
 ;;;;;;;;;;;;
 ;; Scheme 
@@ -482,7 +525,7 @@
  '(custom-safe-themes
    '("d97a01782bb52080db89146b528036515b42513539659a00fbed472703e64330" "b494aae329f000b68aa16737ca1de482e239d44da9486e8d45800fd6fd636780" "be2e93e3bf85f91d3fc120cc6627360c8f4eae1829f8ce00e53d8d6eac29fee3" "0ab2aa38f12640ecde12e01c4221d24f034807929c1f859cbca444f7b0a98b3a" "776c1ab52648f98893a2aa35af2afc43b8c11dd3194a052e0b2502acca02bfce" "7f1d414afda803f3244c6fb4c2c64bea44dac040ed3731ec9d75275b9e831fe5" "51ec7bfa54adf5fff5d466248ea6431097f5a18224788d0bd7eb1257a4f7b773" "d6692db3e3ba6dbfd61473ad89794abe234fa2eceed977dcff279fda96316e2e" default))
  '(package-selected-packages
-   '(compat gnu-elpa-keyring-update evil org-bullets avk-emacs-themes org rainbow-delimiters paredit molokai-theme anaconda-mode with-venv counsel-projectile dracula-theme ubuntu-theme cedit inkpot-theme counsel-gtags all-the-icons-dired all-the-icons-ibuffer spaceline-all-the-icons treemacs treemacs-icons-dired pcre2el 0blayout treemacs-all-the-icons counsel-etags ipython-shell-send grip-mode reveal-in-osx-finder org-re-reveal-ref solarized-theme swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy flycheck slime python-mode lorem-ipsum hydra helm-xref))
+   '(diminish compat gnu-elpa-keyring-update evil org-bullets avk-emacs-themes org rainbow-delimiters paredit molokai-theme anaconda-mode with-venv counsel-projectile dracula-theme ubuntu-theme cedit inkpot-theme counsel-gtags all-the-icons-dired all-the-icons-ibuffer spaceline-all-the-icons treemacs treemacs-icons-dired pcre2el 0blayout treemacs-all-the-icons counsel-etags ipython-shell-send grip-mode reveal-in-osx-finder org-re-reveal-ref solarized-theme swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy flycheck slime python-mode lorem-ipsum hydra helm-xref))
  '(safe-local-variable-values '((encoding . utf-8))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
