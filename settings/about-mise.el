@@ -10,6 +10,15 @@
   :ensure t)
 
 
+(use-package plantuml-mode
+  :ensure t
+  :mode
+  ("\\.puml\\'" . plantuml-mode)
+  :init
+  (setq plantuml-jar-path plantuml-path)
+  (setq plantuml-default-exec-mode 'jar))
+
+
 (use-package markdown-mode
   :ensure t
   :commands (markdown-mode gfm-mode)
