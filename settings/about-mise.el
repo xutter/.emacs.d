@@ -42,6 +42,7 @@
 (use-package diminish
   :ensure t)
 
+
 (use-package projectile
   :diminish projectile-mode
   :hook

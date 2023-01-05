@@ -1,7 +1,7 @@
 (setq treemacs-no-load-time-warnings t)
 
 ;; load configure file, almost executable's path
-(load-file "~/.emacs.d/config.el")
+(require 'configure)
 ;; hightlight current line
 (global-hl-line-mode 1)
 ;; disable toolbar
