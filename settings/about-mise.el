@@ -9,7 +9,18 @@
 (use-package magit
   :ensure t)
 
+;; setting for tree-sitter
+(use-package tree-sitter
+  :ensure
+  :config
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
+(use-package tree-sitter-langs
+  :ensure)
+
+
+;; setting for plantuml
 (use-package plantuml-mode
   :ensure t
   :mode
