@@ -20,6 +20,11 @@
   :ensure)
 
 
+;; setting for mind-map based on graphviz
+(use-package graphviz-dot-mode
+  :ensure t)
+
+
 ;; setting for plantuml
 (use-package plantuml-mode
   :ensure t
