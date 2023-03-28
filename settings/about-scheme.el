@@ -5,8 +5,7 @@
 
 (require 'cmuscheme)
 
-(use-package paredit
-  :ensure t)
+(use-package paredit)
 
 ;; push scheme interpreter path to exec-path
 (push scheme-path exec-path)

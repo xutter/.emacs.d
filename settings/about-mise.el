@@ -7,27 +7,15 @@
 
 ;; setting for git
 (use-package magit
-  :ensure t)
-
-;; setting for tree-sitter
-(use-package tree-sitter
-  :ensure
-  :config
-  (global-tree-sitter-mode)
-  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
-
-(use-package tree-sitter-langs
-  :ensure)
+  :defer t)
 
 
 ;; setting for mind-map based on graphviz
-(use-package graphviz-dot-mode
-  :ensure t)
+(use-package graphviz-dot-mode)
 
 
 ;; setting for plantuml
 (use-package plantuml-mode
-  :ensure t
   :mode
   ("\\.puml\\'" . plantuml-mode)
   :init
@@ -36,7 +24,6 @@
 
 
 (use-package markdown-mode
-  :ensure t
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
@@ -47,16 +34,13 @@
 ;; Provides workspaces with file browsing (tree file viewer)
 ;; and project management when coupled with `projectile`.
 (use-package treemacs
-  :ensure t
-  :defer t
   :config
   (setq treemacs-width 36
 	treemacs-python-executable python-path)
   :bind ("C-c t" . treemacs))
 
 
-(use-package diminish
-  :ensure t)
+(use-package diminish)
 
 
 (use-package projectile
@@ -78,7 +62,7 @@
 
 
 (use-package counsel-projectile
-  :ensure t
+  :defer t
   :config (counsel-projectile-mode))
 
 
@@ -87,7 +71,6 @@
 
 
 (use-package yasnippet
-  :ensure t
   :config
   (yas-global-mode 1)
   (yas-reload-all)
@@ -97,7 +80,6 @@
 
 ;; optional if you want which-key integration
 (use-package which-key
-  :ensure t
   :config
   (which-key-mode))
 
@@ -108,7 +90,6 @@
 ;; Provides completion, with the proper backend
 ;; it will provide Python completion.
 (use-package company
-  :ensure t
   :defer t
   :diminish
   :config
@@ -125,7 +106,6 @@
 (global-font-lock-mode 1)
 
 (use-package all-the-icons
-  :ensure t
   :if (display-graphic-p))
 
 

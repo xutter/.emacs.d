@@ -1,3 +1,7 @@
+(use-package restart-emacs
+  :bind
+  ("C-c r" . restart-emacs))
+
 (setq treemacs-no-load-time-warnings t)
 
 ;; load configure file, almost executable's path
@@ -16,7 +20,9 @@
 ;; disable alert
 (setq visible-bell 0)
 ;; show line num
-(global-linum-mode)
+(if (< emacs-major-version 29)
+  (global-linum-mode)
+  (global-display-line-numbers-mode t))
 ;; show cursor position within line
 (column-number-mode 1)
 ;; make lines wrap at word boundaries
