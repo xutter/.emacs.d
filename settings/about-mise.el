@@ -6,8 +6,8 @@
 
 
 ;; setting for git
-(use-package magit
-  :defer t)
+;;(use-package magit
+;;  :defer t)
 
 
 ;; setting for mind-map based on graphviz
@@ -15,7 +15,10 @@
 
 
 ;; setting for latex
-(use-package auctex)
+(use-package auctex
+  :defer t
+  :config
+  (setq TeX-auto-save t))
 
 ;; setting for plantuml
 (use-package plantuml-mode
