@@ -14,6 +14,9 @@
 (use-package graphviz-dot-mode)
 
 
+;; setting for latex
+(use-package auctex)
+
 ;; setting for plantuml
 (use-package plantuml-mode
   :mode
