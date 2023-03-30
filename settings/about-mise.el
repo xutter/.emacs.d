@@ -1,10 +1,3 @@
-;; (unless (package-installed-p 'evil)
-;;   (package-install 'evil))
-;;
-;; (require 'evil)
-;; (evil-mode 1)
-
-
 ;; setting for git
 ;;(use-package magit
 ;;  :defer t)
@@ -72,9 +65,7 @@
   :config (counsel-projectile-mode))
 
 
-(use-package eldoc
-  :diminish eldoc-mode)
-
+(require 'eldoc)
 
 (use-package yasnippet
   :config

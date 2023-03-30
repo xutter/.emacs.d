@@ -1,7 +1,6 @@
-(use-package org
-  :hook
-  ((org-mode-hook outline-minor-mode))
-  :mode (("\\.org\\'" . org-mode)))
+(require 'org)
+(add-hook 'org-mode-hook #'outline-minor-mode)
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 
 (use-package org-bullets
   :defer t
