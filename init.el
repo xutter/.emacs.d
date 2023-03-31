@@ -12,7 +12,16 @@
     (package-initialize))
 ;; (package-refresh-contents)
 
-(setq debug-on-error 't)
+;; (setq debug-on-error 't)
+
+
+;; 设置编码为 UTF-8
+(set-language-environment "UTF-8")
+(setq locale-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+
+
 ;;;;;;;;;;;;;;;;;
 ;; use-package
 ;;;;;;;;;;;;;;;;;
@@ -48,8 +57,6 @@
 
 (require 'about-prog)
 
-;; (require 'about-lsp-mode)
-
 (require 'about-scheme)
 
 (require 'about-lisp)
@@ -65,7 +72,7 @@
    '(:foreground default :background default :scale 2.0 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
 		 ("begin" "$1" "$" "$$" "\\(" "\\[")))
  '(package-selected-packages
-   '(graphviz-dot-mode esup plantuml-mode poly-markdown dap-mode bui magit diminish compat gnu-elpa-keyring-update evil org-bullets avk-emacs-themes org rainbow-delimiters paredit molokai-theme anaconda-mode with-venv counsel-projectile dracula-theme ubuntu-theme cedit inkpot-theme counsel-gtags all-the-icons-dired all-the-icons-ibuffer spaceline-all-the-icons treemacs treemacs-icons-dired pcre2el 0blayout treemacs-all-the-icons counsel-etags ipython-shell-send grip-mode reveal-in-osx-finder org-re-reveal-ref solarized-theme swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy flycheck slime python-mode lorem-ipsum hydra helm-xref))
+   '(rime graphviz-dot-mode esup plantuml-mode poly-markdown dap-mode bui magit diminish compat gnu-elpa-keyring-update evil org-bullets avk-emacs-themes org rainbow-delimiters paredit molokai-theme anaconda-mode with-venv counsel-projectile dracula-theme ubuntu-theme cedit inkpot-theme counsel-gtags all-the-icons-dired all-the-icons-ibuffer spaceline-all-the-icons treemacs treemacs-icons-dired pcre2el 0blayout treemacs-all-the-icons counsel-etags ipython-shell-send grip-mode reveal-in-osx-finder org-re-reveal-ref solarized-theme swiper ruby-tools web-mode which-key ## js3-mode imenus ox-reveal helm-flycheck rjsx-mode js2-mode tide avy-flycheck helm ccls ivy-avy flycheck slime python-mode lorem-ipsum hydra helm-xref))
  '(safe-local-variable-values '((encoding . utf-8))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

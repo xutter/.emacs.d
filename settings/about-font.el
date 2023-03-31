@@ -1,37 +1,50 @@
-;; (defun set-font ()
-;;   ;; Setting default font
-;;   (set-face-attribute 'default nil :font (font-spec :family "SauceCodePro Nerd Font" :size 14))
-;;   ;; Setting Chinese Font
-;;   ;; (dolist (charset '(kana han symbol cjk-misc bopomofo))
-;;   ;;   (set-fontset-font (frame-parameter nil 'font)
-;;   ;;             charset
-;;   ;;             (font-spec :family "WenQuanYi Zen Hei Mono")));; :size 20)))) 文泉驿字体
-;;   (set-fontset-font t 'unicode (font-spec :family "Noto Color Emoji"))
-;;   (set-fontset-font t 'han (font-spec :family "Wenquanyi Zen Hei" :size 17))
-;;   (setq face-font-rescale-alist '(("WenQuanYi Zen Hei" . 3.0)))
-;;   )
-;; (add-to-list 'after-make-frame-functions
-;; 	     (lambda (new-frame)
-;; 	       (select-frame new-frame)
-;; 	       (if window-system
-;; 		   (set-font))))
-;; (if window-system
-;;     (set-font))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 字体设置
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defvar zh-font "WenQuanYi Zen Hei Mono"
+  "指定的中文字体")
 
-;;  ;;;;;;;;|
-;;  中文字体|
+(defvar en-font "SauceCodePro Nerd Font"
+  "指定的英文字体")
+
+(defvar emoji-font "Segoe UI Emoji"
+  "指定的表情字体")
+
+(defvar symbol-font "Segoe UI Symbol"
+  "指定的符号字体")
+
+(if (display-graphic-p)
+    (cond ((eq system-type 'windows-nt)
+            (setq zh-font "Microsoft YaHei Mono"))
+           ((eq system-type 'gnu/linux)
+           (setq zh-font "WenQuanYi Zen Hei Mono")))
+    (cond ((eq system-type 'windows-nt)
+            (setq zh-font "Microsoft YaHei Mono"))
+           ((eq system-type 'gnu/linux)
+           (setq zh-font "WenQuanYi Zen Hei Mono"))))
 
 ;; 设置默认字体
 (set-face-attribute 'default nil
-		    :family "Source Code Pro"
+		    :family en-font
 		    :height 120
 		    :weight 'normal
-		    :width 'normal
-		    )
-;; 设置中文字体为文泉驿
-(set-fontset-font t 'han "WenQuanYi Zen Hei Mono:16")
+		    :width 'normal)
 
-(setq face-font-rescale-alist '(("WenQuanYi Zen Hei Mono" . 2.0)
-				("Source Code Pro" . 1.0)))
+;; 设置中文字体
+(set-fontset-font t 'han (font-spec :family zh-font))
+(dolist (charset '(kana han cjk-misc bopomofo))
+  (set-fontset-font t
+                    charset
+                    (font-spec :family zh-font)))
+;; 设置英文字体
+(set-fontset-font t 'latin (font-spec :family en-font))
+;; 设置符号字体
+(set-fontset-font t 'symbol (font-spec :family symbol-font))
+;; 设置emoji字体
+(set-fontset-font t 'emoji (font-spec :family emoji-font))
+
+(setq face-font-rescale-alist 
+      `((,zh-font . 1.2)
+        (,en-font . 1.0)))
 
 (provide 'about-font)

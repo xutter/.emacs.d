@@ -1,18 +1,31 @@
+(use-package rime
+  :custom
+  (default-input-method "rime"))
+
+(defun set-rime-cursor-style ()
+  "Set RIME cursor style for GUI Emacs."
+  (setq rime-show-candidate 'posframe)
+  (set-face-attribute 'rime-default-face nil
+                      :background "yellow"
+                      :foreground "black"
+                      :family "Microsoft YaHei"
+                      :height 160))
+(add-hook 'after-init-hook 'set-rime-cursor-style)
+
+(defun set-rime-cursor-style ()
+  "Set RIME cursor style for terminal Emacs."
+  (setq rime-show-candidate 'minibuffer)
+  (set-face-attribute 'rime-preedit-face nil
+                      :background "yellow"
+                      :foreground "black"
+                      :family "SimHei"
+                      :height 160))
+(add-hook 'after-make-terminal-functions 'set-rime-cursor-style)
+
 (use-package counsel
   :bind
   (("M-x" . counsel-M-x)
    ("C-x C-f" . counsel-find-file)
-;;    ("<f1> f" . counsel-describe-function)
-;;    ("<f1> v" . counsel-describe-variable)
-;;    ("<f1> o" . counsel-describe-symbol)
-;;    ("<f1> l" . counsel-find-library)
-;;    ("<f2> i" . counsel-info-lookup-symbol)
-;;    ("<f2> u" . counsel-unicode-char)
-;;    ("C-c g" . counsel-git)
-;;    ("C-c j" . counsel-git-grep)
-;;    ("C-c k" . counsel-ag)
-;;    ("C-x l" . counsel-locate)
-;;    ("C-S-o" . counsel-rhythmbox)
    ("C-c s" . counsel-etags-grep)))
 
 (ivy-mode 1)
