@@ -12,7 +12,7 @@
     (package-initialize))
 ;; (package-refresh-contents)
 
-;; (setq debug-on-error 't)
+(setq debug-on-error 't)
 
 
 ;; 设置编码为 UTF-8

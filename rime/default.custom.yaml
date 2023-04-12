@@ -1,0 +1,11 @@
+patch:
+    schema_list:
+      - schema: double_pinyin
+    key_binder:
+      bindings:
+        - { accept: minus, send: Page_Up, when: paging} #减号向前翻页
+        - { accept: equal, send: Page_Down, when: has_menu} #等于号向后翻页
+    speller:                 #拼写时选项
+      max_code_length: 4     #最大输入四码
+      auto_select: true      #自动上屏
+      auto_select_unique_candidate: true  #唯一字自动提交
