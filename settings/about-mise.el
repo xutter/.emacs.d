@@ -4,7 +4,8 @@
 
 
 ;; setting for mind-map based on graphviz
-(use-package graphviz-dot-mode)
+(use-package graphviz-dot-mode
+  :defer t)
 
 
 ;; setting for latex
@@ -48,10 +49,10 @@
   (after-init . projectile-mode)
   :bind-keymap
   ("C-c p" . projectile-command-map)
-  :init
-  ;; NOTE: Set this to the folder where you keep your Git repos!
-  ;; (setq projectile-project-search-path '("D:\\git\\" "D:\\CodeWarehouse"))
-  (setq projectile-switch-project-action #'projectile-dired)
+  ;; :init
+  ;; ;; NOTE: Set this to the folder where you keep your Git repos!
+  ;; ;; (setq projectile-project-search-path '("D:\\git\\" "D:\\CodeWarehouse"))
+  ;; (setq projectile-switch-project-action #'projectile-dired)
   :custom
   (projectile-completion-system 'ivy)
   (projectile-dynamic-mode-line nil)
@@ -103,6 +104,7 @@
 (global-font-lock-mode 1)
 
 (use-package all-the-icons
+  :defer t
   :if (display-graphic-p))
 
 

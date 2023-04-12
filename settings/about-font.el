@@ -15,11 +15,11 @@
 
 (if (display-graphic-p)
     (cond ((eq system-type 'windows-nt)
-            (setq zh-font "Microsoft YaHei Mono"))
+            (setq zh-font "FangSong_GB2312"))
            ((eq system-type 'gnu/linux)
            (setq zh-font "WenQuanYi Zen Hei Mono")))
     (cond ((eq system-type 'windows-nt)
-            (setq zh-font "Microsoft YaHei Mono"))
+            (setq zh-font "FangSong"))
            ((eq system-type 'gnu/linux)
            (setq zh-font "WenQuanYi Zen Hei Mono"))))
 
@@ -31,7 +31,6 @@
 		    :width 'normal)
 
 ;; 设置中文字体
-(set-fontset-font t 'han (font-spec :family zh-font))
 (dolist (charset '(kana han cjk-misc bopomofo))
   (set-fontset-font t
                     charset

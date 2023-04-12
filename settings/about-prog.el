@@ -1,4 +1,5 @@
 (use-package eglot
+  :defer t
   :config
   (add-to-list 'eglot-server-programs '(python-mode "pyright-langserver" "--stdio"))
   (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd")))

@@ -1,6 +1,8 @@
 (use-package rime
   :custom
-  (default-input-method "rime"))
+  (default-input-method "rime")
+  :init
+  (setq rime-share-data-dir "~/.emacs.d/rime-data"))
 
 (defun set-rime-cursor-style ()
   "Set RIME cursor style for GUI Emacs."
