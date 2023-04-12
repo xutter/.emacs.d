@@ -16,11 +16,12 @@
 
 
 ;; 设置编码为 UTF-8
-(set-language-environment "UTF-8")
-(setq locale-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
-(set-default-coding-systems 'utf-8)
-
+;; (prefer-coding-system 'utf-8)
+;; (set-default-coding-systems 'utf-8)
+;; (set-language-environment "UTF-8")
+;; (setq locale-coding-system 'utf-8)
+;; (set-terminal-coding-system 'utf-8)
+;; (set-keyboard-coding-system 'utf-8)
 
 ;;;;;;;;;;;;;;;;;
 ;; use-package
@@ -39,8 +40,9 @@
 
 ;; Start as a server when first start
 ;; (server-start)
-
+(add-to-list 'load-path (expand-file-name "emacswiki.org" user-emacs-directory))
 (add-to-list 'load-path (expand-file-name "settings" user-emacs-directory))
+
 
 (require 'about-base)
 
