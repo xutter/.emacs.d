@@ -42,17 +42,12 @@
 
 (use-package diminish)
 
-
 (use-package projectile
-  :diminish projectile-mode
+  ;; :diminish projectile-mode
   :hook
   (after-init . projectile-mode)
   :bind-keymap
   ("C-c p" . projectile-command-map)
-  ;; :init
-  ;; ;; NOTE: Set this to the folder where you keep your Git repos!
-  ;; ;; (setq projectile-project-search-path '("D:\\git\\" "D:\\CodeWarehouse"))
-  ;; (setq projectile-switch-project-action #'projectile-dired)
   :custom
   (projectile-completion-system 'ivy)
   (projectile-dynamic-mode-line nil)
@@ -89,7 +84,7 @@
 ;; it will provide Python completion.
 (use-package company
   :defer t
-  :diminish
+  :diminish company-mode
   :config
   (setq company-idle-delay 0
         company-minimum-prefix-length 1

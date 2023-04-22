@@ -67,15 +67,12 @@
 
 (add-hook 'python-mode-hook (lambda () (require 'pyrightconfig)))
 
-(use-package tramp
-  :defer t
-  :config
-  (setq vc-handled-backends '(Git)
-        file-name-inhibit-locks t
-        tramp-inline-compress-start-size 1000
-        tramp-copy-size-limit 10000
-        tramp-verbose 1)
-  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+(require 'tramp)
+(setq vc-handled-backends '(Git)
+      file-name-inhibit-locks t
+      tramp-inline-compress-start-size 1000
+      tramp-copy-size-limit 10000
+      tramp-verbose 1)
 
 (require 'tramp-venv)
 
