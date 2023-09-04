@@ -39,8 +39,9 @@
 (set-fontset-font t 'latin (font-spec :family en-font))
 ;; 设置符号字体
 (set-fontset-font t 'symbol (font-spec :family symbol-font))
-;; 设置emoji字体
-(set-fontset-font t 'emoji (font-spec :family emoji-font))
+(while (> emacs-major-version 27)
+  ;; 设置emoji字体
+  (set-fontset-font t 'emoji (font-spec :family emoji-font)))
 
 (setq face-font-rescale-alist 
       `((,zh-font . 1.2)

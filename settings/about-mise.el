@@ -23,12 +23,13 @@
   (setq plantuml-default-exec-mode 'jar))
 
 
-(use-package markdown-mode
-  :commands (markdown-mode gfm-mode)
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
-  :init (setq markdown-command "pandoc"))
+(while (> emacs-major-version 27)
+  (use-package markdown-mode
+    :commands (markdown-mode gfm-mode)
+    :mode (("README\\.md\\'" . gfm-mode)
+           ("\\.md\\'" . markdown-mode)
+           ("\\.markdown\\'" . markdown-mode))
+    :init (setq markdown-command "pandoc")))
 
 
 ;; Provides workspaces with file browsing (tree file viewer)
