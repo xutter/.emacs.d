@@ -23,7 +23,7 @@
   (setq plantuml-default-exec-mode 'jar))
 
 
-(while (> emacs-major-version 27)
+(if (> emacs-major-version 27)
   (use-package markdown-mode
     :commands (markdown-mode gfm-mode)
     :mode (("README\\.md\\'" . gfm-mode)

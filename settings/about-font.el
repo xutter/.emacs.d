@@ -4,7 +4,7 @@
 (defvar zh-font "WenQuanYi Zen Hei Mono"
   "指定的中文字体")
 
-(defvar en-font "SauceCodePro Nerd Font"
+(defvar en-font "SauceCodePro NF"
   "指定的英文字体")
 
 (defvar emoji-font "Segoe UI Emoji"
@@ -39,7 +39,7 @@
 (set-fontset-font t 'latin (font-spec :family en-font))
 ;; 设置符号字体
 (set-fontset-font t 'symbol (font-spec :family symbol-font))
-(while (> emacs-major-version 27)
+(when (> emacs-major-version 27)
   ;; 设置emoji字体
   (set-fontset-font t 'emoji (font-spec :family emoji-font)))
 
