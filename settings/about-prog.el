@@ -47,7 +47,8 @@
             (vue . ("https://github.com/merico-dev/tree-sitter-vue"))
             (yaml . ("https://github.com/ikatyang/tree-sitter-yaml"))
             (toml . ("https://github.com/tree-sitter/tree-sitter-toml"))
-            (zig . ("https://github.com/GrayJack/tree-sitter-zig"))))
+            (zig . ("https://github.com/GrayJack/tree-sitter-zig"))
+	    (haskell . ("https://github.com/tree-sitter/tree-sitter-haskell"))))
     (setq major-mode-remap-alist
           '((c-mode          . c-ts-mode)
             (c++-mode        . c++-ts-mode)

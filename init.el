@@ -62,6 +62,8 @@
 
 (require 'about-lisp)
 
+(require 'about-haskell)
+
 (put 'scroll-left 'disabled nil)
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
