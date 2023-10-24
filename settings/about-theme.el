@@ -30,5 +30,9 @@
     :config
     (load-theme 'solarized-light t)))
 
+(use-package powerline-evil
+  :ensure t
+  :init
+  (powerline-evil-center-color-theme))
 
 (provide 'about-theme)

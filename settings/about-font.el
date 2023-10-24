@@ -4,7 +4,7 @@
 (defvar zh-font "WenQuanYi Zen Hei Mono"
   "指定的中文字体")
 
-(defvar en-font "SauceCodePro NF"
+(defvar en-font "Inconsolata Nerd Font"
   "指定的英文字体")
 
 (defvar emoji-font "Segoe UI Emoji"
@@ -15,11 +15,11 @@
 
 (if (display-graphic-p)
     (cond ((eq system-type 'windows-nt)
-            (setq zh-font "FangSong_GB2312"))
+            (setq zh-font "Sarasa Gothic CL"))
            ((eq system-type 'gnu/linux)
            (setq zh-font "WenQuanYi Zen Hei Mono")))
     (cond ((eq system-type 'windows-nt)
-            (setq zh-font "FangSong"))
+            (setq zh-font "Sarasa Gothic CL")) ;; default FangSong
            ((eq system-type 'gnu/linux)
            (setq zh-font "WenQuanYi Zen Hei Mono"))))
 
@@ -43,8 +43,8 @@
   ;; 设置emoji字体
   (set-fontset-font t 'emoji (font-spec :family emoji-font)))
 
-(setq face-font-rescale-alist 
-      `((,zh-font . 1.2)
-        (,en-font . 1.0)))
-
+;; rsetq face-font-rescale-alist 
+;;       `((,zh-font . 1.2)
+;;         (,en-font . 1.0)))
+;; 
 (provide 'about-font)

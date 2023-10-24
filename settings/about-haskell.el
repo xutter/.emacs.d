@@ -1,4 +1,4 @@
 (use-package haskell-mode
-  :ensure t)
+  :defer)
 
 (provide 'about-haskell)

@@ -64,19 +64,7 @@
 
 (use-package pyvenv
   :config
-  (pyvenv-mode))
-
-(add-hook 'python-mode-hook (lambda () (require 'pyrightconfig)))
-
-(require 'tramp)
-(setq vc-handled-backends '(Git)
-      file-name-inhibit-locks t
-      tramp-inline-compress-start-size 1000
-      tramp-copy-size-limit 10000
-      tramp-verbose 1)
-
-(require 'tramp-venv)
-
-(setq tramp-use-ssh-controlmaster-options nil)
+  (pyvenv-mode)
+  :defer)
 
 (provide 'about-prog)

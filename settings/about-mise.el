@@ -12,7 +12,8 @@
 (use-package auctex
   :defer t
   :config
-  (setq TeX-auto-save t))
+  (setq TeX-auto-save t)
+  (setq-default TeX-engine 'xetex))
 
 ;; setting for plantuml
 (use-package plantuml-mode

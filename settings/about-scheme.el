@@ -3,7 +3,7 @@
 ;;;;;;;;;;;;
 
 
-(require 'cmuscheme)
+(use-package cmuscheme)
 
 (use-package paredit)
 
