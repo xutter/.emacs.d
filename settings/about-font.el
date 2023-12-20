@@ -1,6 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 字体设置
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package unicode-fonts)
 
 (defvar zh-font "Sarasa Mono SC"
   "指定的中文字体")

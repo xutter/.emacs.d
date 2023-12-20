@@ -30,7 +30,9 @@
     :mode (("README\\.md\\'" . gfm-mode)
            ("\\.md\\'" . markdown-mode)
            ("\\.markdown\\'" . markdown-mode))
-    :init (setq markdown-command "pandoc")))
+    :init (setq markdown-command "pandoc"))
+  (use-package markdown-preview-mode
+    :defer t))
 
 
 ;; Provides workspaces with file browsing (tree file viewer)

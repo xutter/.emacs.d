@@ -6,7 +6,8 @@
 
 (setq package-archives '(("gnu"          . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
                          ("melpa"        . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-                         ("stable-melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/stable-melpa/")))
+                         ("stable-melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/stable-melpa/")
+                         ("nongnu"       . "http://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")))
 
 (when (< emacs-major-version 27)
     (package-initialize))
