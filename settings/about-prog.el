@@ -2,9 +2,7 @@
   :defer t
   :config
   (add-to-list 'eglot-server-programs '(python-mode "pyright-langserver" "--stdio"))
-  (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
-  :hook
-  ((python-mode . eglot-ensure)))
+  (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd")))
 
 (when (< 29 emacs-major-version)
   (progn

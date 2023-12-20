@@ -3,12 +3,12 @@
 ;;;;;;;;;;;;;;;;
 
 (defun in-windows ()
-  (setq scheme-path "C:\\Program Files\\Chez Scheme 9.5.8\\bin\\ta6nt")
-  (setq clangd-path "C:\\LLVM\\bin\\clangd.exe")
-  (setq sbcl-path "C:\\opt\\sbcl\\sbcl.exe")
-  (setq python-path "C:\\Python\\python39\\python.exe")
-  (setq pandoc-path "C:\\Pandoc\\pandoc.exe")
-  (setq plantuml-path "C:\\opt\\plantuml\\plantuml-1.2022.13.jar"))
+  (setq scheme-path "C:\\Program Files\\Chez Scheme 9.6.4\\bin\\ta6nt")
+  (setq clangd-path "C:\\bin\\LLVM\\bin\\clangd.exe")
+  (setq sbcl-path "C:\\bin\\sbcl\\sbcl.exe")
+  (setq python-path "C:\\bin\\Python\\python39\\python.exe")
+  (setq pandoc-path "C:\\bin\\Pandoc\\pandoc.exe")
+  (setq plantuml-path "C:\\bin\\plantuml\\plantuml.jar"))
 
 
 (defun in-linux ()
@@ -19,7 +19,7 @@
   (setq pandoc-path "/usr/bin/pandoc")
   (setq plantuml-path "/usr/share/plantuml/plantuml.jar"))
 
-(if (string-match "Linux" (car (split-string (shell-command-to-string "uname -a")))) (in-linux)
-  (in-windows))
+(cond ((eq system-type 'windows-nt) (in-windows))
+      ((eq system-type 'gnu/linux) (in-linux)))
 
 (provide 'configure)

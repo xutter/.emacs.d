@@ -2,7 +2,7 @@
   :bind
   ("C-c r" . restart-emacs))
 
-(setq treemacs-no-load-time-warnings t)
+;; (setq treemacs-no-load-time-warnings t)
 
 ;; load configure file, almost executable's path
 (require 'configure)

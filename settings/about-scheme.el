@@ -3,7 +3,8 @@
 ;;;;;;;;;;;;
 
 
-(use-package cmuscheme)
+(use-package cmuscheme
+  :demand t)
 
 (use-package paredit)
 

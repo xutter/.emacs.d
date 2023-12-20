@@ -9,7 +9,7 @@
    '(:foreground default :background default :scale 2.0 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
 		 ("begin" "$1" "$" "$$" "\\(" "\\[")))
  '(package-selected-packages
-   '(powerline-evil nix-haskell-mode pdf-tools compat all-the-icons auctex avk-emacs-themes benchmark-init company counsel-projectile diminish ef-themes esup graphviz-dot-mode latex-preview-pane markdown-mode org-bullets paredit plantuml-mode rainbow-delimiters restart-emacs rime treemacs which-key with-editor yasnippet))
+   '(gnu-elpa-keyring-update gnu-elpa 0blayout markdown-preview-mode eglot powerline-evil nix-haskell-mode pdf-tools compat all-the-icons auctex avk-emacs-themes benchmark-init company counsel-projectile diminish ef-themes esup graphviz-dot-mode latex-preview-pane markdown-mode org-bullets paredit plantuml-mode rainbow-delimiters restart-emacs rime treemacs which-key with-editor yasnippet))
  '(safe-local-variable-values '((encoding . utf-8))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
