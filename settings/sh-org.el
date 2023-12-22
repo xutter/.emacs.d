@@ -60,4 +60,4 @@
 ;;                            ))
 ;; (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
 ;; (setq org-refile-use-outline-path 'file)
-(provide 'about-org)
+(provide 'sh-org)

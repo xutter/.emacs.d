@@ -107,4 +107,4 @@
   :if (display-graphic-p))
 
 
-(provide 'about-mise)
+(provide 'sh-mise)

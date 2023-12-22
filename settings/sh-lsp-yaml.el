@@ -6,4 +6,4 @@
   :mode (("\\.yaml\\'" . yaml-mode)
 	 ("\\.yml\\'" . yaml-mode)))
 
-(provide 'about-lsp-yaml)
+(provide 'sh-lsp-yaml)

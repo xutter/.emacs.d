@@ -35,4 +35,4 @@
   :init
   (powerline-evil-center-color-theme))
 
-(provide 'about-theme)
+(provide 'sh-theme)

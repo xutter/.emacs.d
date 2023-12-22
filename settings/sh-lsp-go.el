@@ -19,4 +19,4 @@
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
 (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 
-(provide 'about-lsp-go)
+(provide 'sh-lsp-go)

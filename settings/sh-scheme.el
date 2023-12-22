@@ -74,4 +74,4 @@
  'paredit-backward-delete
  'parent-close-round)
 
-(provide 'about-scheme)
+(provide 'sh-scheme)

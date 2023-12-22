@@ -41,4 +41,4 @@
 (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
 
 
-(provide 'about-input)
+(provide 'sh-input)

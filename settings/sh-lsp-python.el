@@ -25,4 +25,4 @@
         (pyvenv-activate (lsp-pyright-locate-venv))
         (message "ACTIVATE_DIR: %s\n" (lsp-pyright-locate-venv)))))
 
-(provide 'about-lsp-python)
+(provide 'sh-lsp-python)

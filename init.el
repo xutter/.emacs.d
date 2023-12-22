@@ -43,30 +43,27 @@
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 ;; Start as a server when first start
-;; (server-start)
-(add-to-list 'load-path (expand-file-name "emacswiki.org" user-emacs-directory))
-(add-to-list 'load-path (expand-file-name "settings" user-emacs-directory))
+; (server-start)
 
+(add-to-list 'load-path (expand-file-name "settings/" user-emacs-directory))
 
-(require 'about-base)
+(require 'sh-base)
 
-(require 'about-theme)
+(require 'sh-theme)
 
-(require 'about-org)
+(require 'sh-org)
 
-(require 'about-font)
+(require 'sh-font)
 
-(require 'about-input)
+(require 'sh-input)
 
-(require 'about-mise)
+(require 'sh-mise)
 
-(require 'about-prog)
+(require 'sh-prog)
 
-(require 'about-scheme)
+(require 'sh-scheme)
 
-(require 'about-lisp)
-
-(require 'about-haskell)
+(require 'sh-lisp)
 
 (put 'scroll-left 'disabled nil)
 

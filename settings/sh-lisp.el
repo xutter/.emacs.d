@@ -3,4 +3,4 @@
 (setq slime-contribs '(slime-fancy))
 (put 'upcase-region 'disabled nil)
 
-(provide 'about-lisp)
+(provide 'sh-lisp)

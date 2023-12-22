@@ -1,3 +1,6 @@
+(use-package haskell-mode
+  :defer)
+
 (use-package eglot
   :defer t
   :config
@@ -65,4 +68,4 @@
   (pyvenv-mode)
   :defer)
 
-(provide 'about-prog)
+(provide 'sh-prog)

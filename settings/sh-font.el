@@ -32,4 +32,4 @@
 ;; 设置符号字体
 (set-fontset-font t 'symbol (font-spec :family symbol-font) nil 'append)
 
-(provide 'about-font)
+(provide 'sh-font)

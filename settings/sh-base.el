@@ -41,4 +41,8 @@
 (setq inhibit-splash-screen t)
 (setq debug-on-error 1)
 
-(provide 'about-base)
+(if (eql system-type "gnu/linux")
+    (set ispell-menu-map-needed t)
+    (start-server))
+
+(provide 'sh-base)

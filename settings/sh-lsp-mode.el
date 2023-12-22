@@ -95,12 +95,12 @@
 ;;   (add-hook 'dap-stopped-hook
 ;;             (lambda (arg) (call-interactively #'dap-hydra))))
 
-(require 'about-lsp-go)
+(require 'sh-lsp-go)
 
-(require 'about-lsp-cpp)
+(require 'sh-lsp-cpp)
 
-(require 'about-lsp-yaml)
+(require 'sh-lsp-yaml)
 
-(require 'about-lsp-python)
+(require 'sh-lsp-python)
 
-(provide 'about-lsp-mode)
+(provide 'sh-lsp-mode)
