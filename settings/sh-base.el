@@ -43,6 +43,6 @@
 
 (if (eql system-type "gnu/linux")
     (set ispell-menu-map-needed t)
-    (start-server))
+    (server-start))
 
 (provide 'sh-base)
