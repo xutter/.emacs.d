@@ -42,7 +42,7 @@
 (setq debug-on-error 1)
 
 (if (eql system-type "gnu/linux")
-    (set ispell-menu-map-needed t)
+    (setq ispell-menu-map-needed t)
     (server-start))
 
 (provide 'sh-base)
