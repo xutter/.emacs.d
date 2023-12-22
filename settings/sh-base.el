@@ -41,7 +41,7 @@
 (setq inhibit-splash-screen t)
 (setq debug-on-error 1)
 
-(if (eql system-type "gnu/linux")
+(when (eql system-type 'gnu/linux)
     (setq ispell-menu-map-needed t)
     (server-start))
 
