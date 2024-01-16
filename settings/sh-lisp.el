@@ -3,8 +3,9 @@
 ;;;;;;;;;;;;
 
 
-(use-package cmuscheme
-  :demand t)
+(if (not (version< emacs-version "28.1"))
+  (use-package cmuscheme
+    :demand t))
 
 (use-package paredit
   :init

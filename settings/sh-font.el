@@ -20,16 +20,15 @@
 		    :font (font-spec
 			   :family en-font
 			   :size 14))
+(when (display-graphic-p)
+  ;; 设置中文字体
+  (dolist (charset '(kana han cjk-misc bopomofo))
+    (set-fontset-font t
+                      charset
+                      (font-spec :family zh-font)))
 
-;; 设置中文字体
-(dolist (charset '(kana han cjk-misc bopomofo))
-  (set-fontset-font t
-                    charset
-                    (font-spec :family zh-font)))
-
-;; 设置表情字体
-(set-fontset-font t 'symbol (font-spec :family emoji-font) nil 'append)
-;; 设置符号字体
-(set-fontset-font t 'symbol (font-spec :family symbol-font) nil 'append)
-
+  ;; 设置表情字体
+  (set-fontset-font t 'symbol (font-spec :family emoji-font) nil 'append)
+  ;; 设置符号字体
+  (set-fontset-font t 'symbol (font-spec :family symbol-font) nil 'append))
 (provide 'sh-font)

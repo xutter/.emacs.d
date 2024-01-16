@@ -10,6 +10,14 @@
   (setq pandoc-path "C:\\bin\\Pandoc\\pandoc.exe")
   (setq plantuml-path "C:\\bin\\plantuml\\plantuml.jar"))
 
+(defun in-cygwin ()
+  (setq scheme-path "/usr/bin")
+  (setq clangd-path "/mingw64/bin/clangd.exe")
+  (setq sbcl-path "C:\\bin\\sbcl\\sbcl.exe")
+  (setq python-path "/mingw64/bin/python.exe")
+  (setq pandoc-path "C:\\bin\\Pandoc\\pandoc.exe")
+  (setq plantuml-path "C:\\bin\\plantuml\\plantuml.jar"))
+
 
 (defun in-linux ()
   (setq scheme-path "/usr/bin/scheme")
@@ -19,7 +27,10 @@
   (setq pandoc-path "/usr/bin/pandoc")
   (setq plantuml-path "/usr/share/plantuml/plantuml.jar"))
 
+
+
 (cond ((eq system-type 'windows-nt) (in-windows))
-      ((eq system-type 'gnu/linux) (in-linux)))
+      ((eq system-type 'gnu/linux)  (in-linux))
+      ((eq system-type 'cygwin)     (in-cygwin)))
 
 (provide 'configure)
