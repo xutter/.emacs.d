@@ -61,8 +61,6 @@
 
 (require 'sh-prog)
 
-(require 'sh-scheme)
-
 (require 'sh-lisp)
 
 (put 'scroll-left 'disabled nil)
