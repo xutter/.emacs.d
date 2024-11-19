@@ -7,13 +7,32 @@
 (use-package graphviz-dot-mode
   :defer t)
 
+;; install pdf-tools
+(use-package pdf-tools
+  :defer t
+  :after (pdf-loader-install))
+
+(use-package cdlatex
+  :defer t
+  :hook (LaTex-mode-hook . turn-on-cdlatex))
 
 ;; setting for latex
 (use-package auctex
   :defer t
   :config
   (setq TeX-auto-save t)
-  (setq-default TeX-engine 'xetex))
+  (setq-default TeX-engine 'xetex)
+  (setq TeX-PDF-mode t)
+  (setq TeX-source-correlate-mode t)
+  (setq TeX-source-correlate-method 'synctex))
+
+;; Use pdf-tools to open PDF files
+(setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+      TeX-source-correlate-start-server t)
+
+;; Update PDF buffers after successful LaTeX runs
+(add-hook 'TeX-after-compilation-finished-functions
+           #'TeX-revert-document-buffer)
 
 ;; setting for plantuml
 (use-package plantuml-mode
