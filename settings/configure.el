@@ -3,6 +3,7 @@
 ;;;;;;;;;;;;;;;;
 
 (defun in-windows ()
+  (setq TeX-tree-roots "/mingw64/bin/")
   (setq scheme-path "C:\\Program Files\\Chez Scheme 9.6.4\\bin\\ta6nt")
   (setq clangd-path "C:\\bin\\LLVM\\bin\\clangd.exe")
   (setq sbcl-path "C:\\bin\\sbcl\\sbcl.exe")

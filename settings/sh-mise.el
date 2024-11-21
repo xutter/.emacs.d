@@ -10,7 +10,11 @@
 ;; install pdf-tools
 (use-package pdf-tools
   :defer t
-  :after (pdf-loader-install))
+  :hook
+  (pdf-view-mode . (lambda () (display-line-numbers-mode 0))))
+
+(pdf-tools-install)
+(pdf-loader-install)
 
 (use-package cdlatex
   :defer t
@@ -27,12 +31,19 @@
   (setq TeX-source-correlate-method 'synctex))
 
 ;; Use pdf-tools to open PDF files
-(setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-      TeX-source-correlate-start-server t)
+(custom-set-variables
+ '(TeX-view-program-selection
+   '(((output-dvi has-no-display-manager)
+      "dvi2tty")
+     ((output-dvi style-pstricks)
+      "dvips and gv")
+     (output-dvi "xdvi")
+     (output-pdf "PDF Tools")
+     (output-html "xdg-open"))))
 
 ;; Update PDF buffers after successful LaTeX runs
 (add-hook 'TeX-after-compilation-finished-functions
-           #'TeX-revert-document-buffer)
+          #'TeX-revert-document-buffer)
 
 ;; setting for plantuml
 (use-package plantuml-mode

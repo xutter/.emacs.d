@@ -2,6 +2,8 @@
 ;; package
 ;;;;;;;;;;;;;
 
+(setq package-gnupghome-dir "~/.emacs.d/elpa/gnupg/")
+
 (require 'package)
 
 (setq package-archives '(("gnu"          . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
