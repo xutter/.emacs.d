@@ -24,6 +24,8 @@
 (use-package auctex
   :defer t
   :config
+  (setq TeX-command-extra-options "-shell-escape --synctex=1")
+  (setq TeX-master nil)
   (setq TeX-auto-save t)
   (setq-default TeX-engine 'xetex)
   (setq TeX-PDF-mode t)
