@@ -56,15 +56,16 @@
   (setq plantuml-default-exec-mode 'jar))
 
 
-(if (> emacs-major-version 27)
-  (use-package markdown-mode
-    :commands (markdown-mode gfm-mode)
-    :mode (("README\\.md\\'" . gfm-mode)
-           ("\\.md\\'" . markdown-mode)
-           ("\\.markdown\\'" . markdown-mode))
-    :init (setq markdown-command "pandoc"))
-  (use-package markdown-preview-mode
-    :defer t))
+(use-package markdown-mode
+  :if (> emacs-major-version 27)
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "pandoc"))
+(use-package markdown-preview-mode
+  :if (< emacs-major-version 27)
+  :defer t)
 
 
 ;; Provides workspaces with file browsing (tree file viewer)
@@ -126,10 +127,24 @@
         company-minimum-prefix-length 1
 	company-dabbrev-other-buffers t
         company-dabbrev-code-other-buffers t
-	lsp-completion-provider :capf)
-  :hook ((text-mode . company-mode)
-         (prog-mode . company-mode)
-	 (scala-mode . company-mode)))
+	lsp-completion-provider :capf
+	company-tooltip-align-annotations t
+	company-show-numbers t
+	company-selection-wrap-around t
+	company-transformers '(company-sort-by-occurrence))
+  (global-company-mode)
+  )
+
+(use-package company-box
+  :ensure t
+  :if window-system
+  :hook
+  (company-mode . company-box-mode))
+
+(use-package company-tabnine
+  :ensure t
+  :config
+  (add-to-list 'company-backends #'company-tabnine))
 
 (require 'font-lock)
 (global-font-lock-mode 1)

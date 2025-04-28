@@ -22,13 +22,14 @@
 ;;   (load-theme 'solarized-light t))
 
 
-(if (> emacs-major-version 27)
-  (use-package ef-themes
-    :config
-    (load-theme 'ef-spring t))
-  (use-package solarized-theme
-    :config
-    (load-theme 'solarized-light t)))
+(use-package ef-themes
+  :if (> emacs-major-version 27)
+  :config
+  (load-theme 'ef-spring t))
+(use-package solarized-theme
+  :if (< emacs-major-version 27)
+  :config
+  (load-theme 'solarized-light t))
 
 (use-package powerline-evil
   :ensure t
