@@ -1,12 +1,3 @@
-(add-hook 'org-mode-hook #'outline-minor-mode)
-(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-
-(use-package org-bullets
-  :defer t
-  :init
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-  (add-hook 'org-mode-hook 'org-language-load))
-
 (defun org-language-load ()
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -14,7 +5,21 @@
      (scheme . t)
      (python . t))))
 
-(setq browse-url-browser-function 'browse-url-chromium)
+(use-package org
+  :mode ("\\.org\\'" . org-mode)
+  :hook (org-mode . outline-minor-mode)
+  :config
+  (org-language-load))
+
+(use-package org-bullets
+  :after org
+  :hook (org-mode . org-bullets-mode))
+
+(setq browse-url-browser-function
+      (cond
+       ((eq system-type 'windows-nt) #'browse-url-default-windows-browser)
+       ((fboundp 'browse-url-xdg-open) #'browse-url-xdg-open)
+       (t #'browse-url-default-browser)))
 ;; 
 ;; (global-set-key "\C-cl" 'org-store-link)
 ;; (global-set-key "\C-ca" 'org-agenda)

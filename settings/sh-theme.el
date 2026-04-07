@@ -23,7 +23,7 @@
 
 
 (use-package ef-themes
-  :if (> emacs-major-version 27)
+  :if (>= emacs-major-version 27)
   :config
   (load-theme 'ef-spring t))
 (use-package solarized-theme

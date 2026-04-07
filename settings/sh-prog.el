@@ -8,21 +8,23 @@
   :defer t
   :config
   (add-to-list 'eglot-server-programs '(python-mode "pyright-langserver" "--stdio"))
-  (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd")))
-(when (not (eq system-type 'cygwin))
-  (if (> 29 emacs-major-version)
-  ;;; if: emacs version early than 29, use tree-sitter.
+  (add-to-list 'eglot-server-programs `((c++-mode c-mode) ,clangd-path)))
+
+(if (< emacs-major-version 29)
     (progn
       (use-package tree-sitter
-        :defer t)
+        :defer t
+        :hook ((c-mode . tree-sitter-mode)
+               (c++-mode . tree-sitter-mode)
+               (python-mode . tree-sitter-mode)
+               (haskell-mode . tree-sitter-mode)))
       (use-package tree-sitter-langs
         :after tree-sitter
         :defer t))
-  ;;; else: emacs version more than 29, use built-in package treesit
-  ;;; Configure tree-sitter language parser library
-    (use-package treesit-auto))
-
-  (global-treesit-auto-mode))
+  (use-package treesit-auto
+    :if (fboundp 'treesit-available-p)
+    :config
+    (global-treesit-auto-mode)))
 
 (use-package pyvenv
   :config

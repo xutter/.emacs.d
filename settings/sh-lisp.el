@@ -24,10 +24,15 @@
   :defer t)
 
 ;; push scheme interpreter path to exec-path
-(push scheme-path exec-path)
+(let ((scheme-dir (and scheme-path (file-name-directory scheme-path))))
+  (when (and scheme-dir (file-directory-p scheme-dir))
+    (add-to-list 'exec-path scheme-dir)))
 
 ;; scheme interpreter name
-(setq scheme-program-name "scheme")
+(setq scheme-program-name
+      (if (and scheme-path (file-exists-p scheme-path))
+          scheme-path
+        "scheme"))
 
 ;; bypass the interactive question and start the default interpreter
 (defun scheme-proc ()
@@ -66,11 +71,9 @@
   (scheme-split-window)
   (scheme-send-definition))
 
-(unless (package-installed-p 'rainbow-delimiters)
-  (package-install 'rainbow-delimiters))
-(require 'rainbow-delimiters)
-(add-hook 'scheme-mode-hook 'rainbow-delimiters-mode)
-(add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
+(use-package rainbow-delimiters
+  :hook ((scheme-mode . rainbow-delimiters-mode)
+         (emacs-lisp-mode . rainbow-delimiters-mode)))
 
 (eldoc-add-command
  'paredit-backward-delete

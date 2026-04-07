@@ -6,16 +6,14 @@
 
 (require 'package)
 
-(setq package-archives '(("gnu"          . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-                         ("melpa"        . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-                         ("stable-melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/stable-melpa/")
-                         ("nongnu"       . "http://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")))
+(setq package-archives '(("gnu"          . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+                         ("melpa"        . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+                         ("stable-melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/stable-melpa/")
+                         ("nongnu"       . "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")))
 
 (when (< emacs-major-version 27)
     (package-initialize))
 ;; (package-refresh-contents)
-
-(setq debug-on-error 't)
 
 
 ;; 设置编码为 UTF-8
@@ -38,10 +36,15 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+(defvar sh-enable-benchmark-init nil
+  "Enable benchmark-init when profiling startup.")
+
 ;; benchmark-init
 (use-package benchmark-init
+  :if sh-enable-benchmark-init
+  :demand t
   :config
-  (add-hook 'before-init-hook 'benchmark-init/activate)
+  (benchmark-init/activate)
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 ;; Start as a server when first start

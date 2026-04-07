@@ -19,10 +19,10 @@
 (show-paren-mode 1)
 ;; disable alert
 (setq visible-bell 0)
-;; show line num
+;; show line numbers only where they are useful
 (if (< emacs-major-version 29)
-  (global-linum-mode)
-  (global-display-line-numbers-mode t))
+    (add-hook 'prog-mode-hook #'linum-mode)
+  (add-hook 'prog-mode-hook #'display-line-numbers-mode))
 ;; show cursor position within line
 (column-number-mode 1)
 ;; make lines wrap at word boundaries
@@ -39,10 +39,12 @@
 (setq c-basic-offset 4)
 (setq indent-tab-mode nil)
 (setq inhibit-splash-screen t)
-(setq debug-on-error 1)
 
-(when (eql system-type 'gnu/linux)
-    (setq ispell-menu-map-needed t)
-    (server-start))
+(when (eq system-type 'gnu/linux)
+  (setq ispell-menu-map-needed t))
+
+(require 'server)
+(unless (server-running-p)
+  (server-start))
 
 (provide 'sh-base)
