@@ -58,6 +58,8 @@
 
 (require 'sh-org)
 
+(require 'sh-calendar)
+
 (require 'sh-font)
 
 (require 'sh-input)
